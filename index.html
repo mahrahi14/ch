@@ -7,11 +7,11 @@
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Animate.css (for extra animations) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <!-- AOS (Animate on Scroll) -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP for professional animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -20,85 +20,69 @@
         }
 
         body {
-            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
-            background: radial-gradient(circle at 10% 30%, #f8fafc, #e2e8f0);
-            color: #1e293b;
+            font-family: 'Space Grotesk', 'Hind Siliguri', sans-serif;
+            background: #030614;
+            color: #ffffff;
             line-height: 1.6;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* পার্টিকেল ব্যাকগ্রাউন্ড */
-        #particles-js {
+        /* ক্যানভাস ব্যাকগ্রাউন্ড */
+        #canvas-bg {
             position: fixed;
-            width: 100%;
-            height: 100%;
             top: 0;
             left: 0;
-            z-index: -1;
-            opacity: 0.5;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 20px;
             position: relative;
             z-index: 2;
         }
 
-        /* কাস্টম কার্সর */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #667eea;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: all 0.1s ease;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
-        }
-
-        .cursor-follower {
-            width: 40px;
-            height: 40px;
-            background: rgba(102, 126, 234, 0.2);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transition: all 0.3s ease;
-            transform: translate(-50%, -50%);
-        }
-
-        /* গ্লাসমর্ফিজম কার্ড - অতি মসৃণ */
+        /* গ্লাসমর্ফিজম কার্ড - অতি প্রিমিয়াম */
         .glass-card {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 40px;
-            padding: 30px 25px;
-            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255,255,255,0.6) inset;
-            margin-bottom: 25px;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: floatIn 1s ease-out;
-            transform-style: preserve-3d;
-            perspective: 1000px;
+            background: rgba(10, 15, 30, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 48px;
+            padding: 35px 30px;
+            box-shadow: 0 50px 80px -30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            margin-bottom: 30px;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
         }
 
-        .glass-card:hover {
-            transform: translateY(-10px) rotateX(2deg) rotateY(1deg);
-            box-shadow: 0 50px 80px -20px rgba(102, 126, 234, 0.6), 0 0 0 2px rgba(255,255,255,0.8) inset;
-            background: rgba(255, 255, 255, 0.35);
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+            transition: left 1.5s ease;
+            pointer-events: none;
         }
 
-        @keyframes floatIn {
-            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* হিরো সেকশন */
@@ -106,36 +90,29 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 35px;
+            gap: 50px;
+            position: relative;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
             .hero {
                 flex-direction: row;
-                gap: 60px;
+                gap: 80px;
             }
         }
 
-        /* প্রোফাইল ইমেজ - 3D রোটেটর */
+        /* প্রোফাইল ইমেজ - হলোগ্রাফিক ইফেক্ট */
         .profile-wrapper {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 240px;
+            height: 240px;
             flex-shrink: 0;
-            transform-style: preserve-3d;
-            animation: float3D 6s infinite ease-in-out;
-        }
-
-        @keyframes float3D {
-            0%, 100% { transform: translateY(0) rotateY(0deg); }
-            25% { transform: translateY(-10px) rotateY(5deg); }
-            75% { transform: translateY(10px) rotateY(-5deg); }
         }
 
         @media (min-width: 768px) {
             .profile-wrapper {
-                width: 280px;
-                height: 280px;
+                width: 320px;
+                height: 320px;
             }
         }
 
@@ -144,135 +121,155 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid rgba(255,255,255,0.8);
-            box-shadow: 0 30px 50px -15px rgba(102, 126, 234, 0.5);
             position: relative;
-            z-index: 2;
-            transition: all 0.5s;
-            filter: brightness(1.05) contrast(1.05);
+            z-index: 3;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 50px -20px rgba(102, 126, 234, 0.5);
         }
 
-        .profile-img:hover {
-            transform: scale(1.05);
-            border-color: white;
-        }
-
-        /* প্রোফাইল মাল্টি-গ্লো ইফেক্ট */
-        .profile-glow {
+        /* হলোগ্রাফিক রিং */
+        .holographic-ring {
             position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            background: conic-gradient(from 0deg, #667eea, #764ba2, #ff6b6b, #4ecdc4, #667eea, #fbbf24, #667eea);
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
             border-radius: 50%;
-            filter: blur(25px);
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #667eea, #ff6b6b) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rotateGradient 6s linear infinite;
+            z-index: 2;
             opacity: 0.7;
-            animation: rotateGlow 8s linear infinite, pulseGlowSize 3s ease-in-out infinite;
+        }
+
+        @keyframes rotateGradient {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* অরবিটাল ইফেক্ট */
+        .orbit-ring {
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            right: -30px;
+            bottom: -30px;
+            border-radius: 50%;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            animation: orbitPulse 3s ease-in-out infinite;
             z-index: 1;
         }
 
-        .profile-glow-secondary {
+        .orbit-ring:nth-child(2) {
+            top: -50px;
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
+            border-color: rgba(255, 107, 107, 0.2);
+            animation-delay: 0.5s;
+        }
+
+        @keyframes orbitPulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.6; }
+        }
+
+        /* ফ্লোটিং পার্টিকেল */
+        .floating-particles {
             position: absolute;
-            top: -25px;
-            left: -25px;
-            right: -25px;
-            bottom: -25px;
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, transparent 70%);
-            border-radius: 50%;
-            filter: blur(30px);
-            opacity: 0.4;
-            animation: rotateReverse 12s linear infinite;
-            z-index: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
         }
 
-        @keyframes rotateGlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes rotateReverse {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(-360deg); }
-        }
-
-        @keyframes pulseGlowSize {
-            0%, 100% { filter: blur(25px); opacity: 0.7; }
-            50% { filter: blur(35px); opacity: 0.9; }
-        }
-
-        /* ভেরিফাইড ব্যাজ */
-        .verified-badge {
+        .particle {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: linear-gradient(145deg, #1DA1F2, #0a7bc1);
-            color: white;
-            width: 48px;
-            height: 48px;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            border: 3px solid white;
-            z-index: 3;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            animation: pulseBadge 2.2s infinite, spinBadge 10s linear infinite;
+            animation: float 4s infinite ease-in-out;
         }
 
-        @keyframes pulseBadge {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(29, 161, 242, 0.7); }
-            70% { transform: scale(1.15); box-shadow: 0 0 25px 15px rgba(29, 161, 242, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(29, 161, 242, 0); }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(10px, -10px); }
+            50% { transform: translate(20px, 0); }
+            75% { transform: translate(10px, 10px); }
         }
 
-        @keyframes spinBadge {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* হিরো কন্টেন্ট */
+        .hero-content {
+            text-align: center;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        @media (min-width: 992px) {
+            .hero-content {
+                text-align: left;
+            }
         }
 
         .hero-content h1 {
-            font-size: 38px;
-            font-weight: 800;
-            background: linear-gradient(145deg, #1e293b, #4a3f6e, #667eea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: gradientShift 4s ease infinite;
-            margin-bottom: 8px;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 15px;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-            100% { background-position: 0% center; }
+        @media (min-width: 768px) {
+            .hero-content h1 {
+                font-size: 72px;
+            }
         }
 
-        /* ট্যাগ অ্যানিমেশন */
+        .glitch-text {
+            position: relative;
+            color: white;
+            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 255, 0.75);
+            animation: glitch 6s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 255, 0.75); }
+            25% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.05em 0 rgba(0, 255, 255, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em -0.05em 0 rgba(0, 255, 255, 0.75); }
+            75% { text-shadow: -0.025em -0.05em 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 255, 0.75); }
+        }
+
+        /* অ্যানিমেটেড ট্যাগ */
         .hero-tags {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 12px;
-            margin: 18px 0;
+            margin: 20px 0;
+        }
+
+        @media (min-width: 992px) {
+            .hero-tags {
+                justify-content: flex-start;
+            }
         }
 
         .hero-tag {
-            background: rgba(255,255,255,0.3);
-            backdrop-filter: blur(5px);
-            color: #1e293b;
-            padding: 8px 20px;
+            padding: 10px 22px;
             border-radius: 50px;
             font-size: 14px;
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.6);
-            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.1);
-            transition: all 0.4s;
-            animation: tagPopIn 0.6s backwards;
-            animation-delay: calc(0.15s * var(--i, 1));
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         .hero-tag::before {
@@ -283,7 +280,7 @@
             width: 0;
             height: 0;
             border-radius: 50%;
-            background: rgba(255,255,255,0.5);
+            background: rgba(102, 126, 234, 0.3);
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
@@ -293,76 +290,46 @@
             height: 200px;
         }
 
-        .hero-tag:nth-child(1) { --i: 1; }
-        .hero-tag:nth-child(2) { --i: 2; }
-        .hero-tag:nth-child(3) { --i: 3; }
-        .hero-tag:nth-child(4) { --i: 4; }
-
-        @keyframes tagPopIn {
-            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .hero-tag:hover {
-            background: linear-gradient(145deg, #667eea, #764ba2);
-            color: white;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 25px -8px #667eea;
-        }
-
         /* আন্দোলন ব্যাজ */
         .movement-badge {
-            background: linear-gradient(145deg, #ef4444, #b91c1c, #7f1d1d);
-            color: white;
-            padding: 12px 25px;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            padding: 14px 28px;
             border-radius: 60px;
             display: inline-block;
-            font-weight: 700;
-            font-size: 15px;
-            margin: 15px 0;
-            box-shadow: 0 15px 30px -8px rgba(239,68,68,0.6);
-            animation: pulseRed 2.5s infinite, gradientShift 5s ease infinite;
-            background-size: 200% auto;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        @keyframes pulseRed {
-            0%, 100% { box-shadow: 0 15px 30px -8px rgba(239,68,68,0.6); transform: scale(1); }
-            50% { box-shadow: 0 25px 45px -5px rgba(239,68,68,0.9); transform: scale(1.02); }
-        }
-
-        /* কোট */
-        .quote {
+            font-weight: 600;
             font-size: 16px;
-            color: #1e293b;
-            font-style: italic;
-            background: rgba(255,255,255,0.4);
-            backdrop-filter: blur(5px);
-            padding: 25px;
-            border-radius: 30px;
             margin: 20px 0;
-            border-left: 6px solid #667eea;
-            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.2);
-            transition: all 0.5s;
             position: relative;
             overflow: hidden;
+            opacity: 0;
+            transform: scale(0.8);
         }
 
-        .quote::after {
+        .movement-badge::after {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s;
-            pointer-events: none;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            animation: rotateBg 8s linear infinite;
         }
 
-        .quote:hover::after {
-            opacity: 1;
+        /* কোট */
+        .quote {
+            font-size: 16px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border-radius: 30px;
+            margin: 25px 0;
+            border-left: 4px solid #667eea;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
         }
 
         /* বাটন গ্রুপ */
@@ -370,11 +337,13 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin: 30px 0 15px;
+            margin: 30px 0;
         }
 
         @media (min-width: 480px) {
-            .button-group { flex-direction: row; }
+            .button-group {
+                flex-direction: row;
+            }
         }
 
         .btn {
@@ -383,135 +352,98 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 16px;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             border: none;
             cursor: pointer;
             flex: 1;
             position: relative;
             overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.4);
-            transform: translate(-50%, -50%);
-            transition: width 0.8s, height 0.8s;
-            z-index: -1;
-        }
-
-        .btn:hover::before {
-            width: 400px;
-            height: 400px;
+            opacity: 0;
+            transform: translateY(30px);
         }
 
         .btn-primary {
-            background: linear-gradient(145deg, #667eea, #5a67d8, #4c51bf);
-            background-size: 200% auto;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            box-shadow: 0 15px 30px -8px #667eea;
-            animation: gradientShift 4s ease infinite;
+            box-shadow: 0 10px 30px -5px #667eea;
         }
 
         .btn-outline {
-            background: rgba(255,255,255,0.2);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
             backdrop-filter: blur(5px);
-            border: 2px solid rgba(102, 126, 234, 0.8);
-            color: #1e293b;
         }
 
         .btn-outline:hover {
-            background: #667eea;
-            color: white;
-            border-color: transparent;
-            transform: translateY(-3px);
-            box-shadow: 0 20px 30px -10px #667eea;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         /* স্ট্যাটস গ্রিড */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+            gap: 20px;
             margin: 30px 0;
         }
 
         @media (min-width: 640px) {
-            .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; }
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 25px;
+            }
         }
 
         .stat-card {
-            background: rgba(255,255,255,0.3);
+            background: rgba(10, 15, 30, 0.4);
             backdrop-filter: blur(10px);
-            padding: 22px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 35px;
+            padding: 25px 15px;
             text-align: center;
-            box-shadow: 0 25px 35px -15px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.7);
-            transition: all 0.5s;
-            animation: statSlideIn 0.7s backwards;
-            animation-delay: calc(0.1s * var(--i, 1));
-            transform-style: preserve-3d;
-        }
-
-        .stat-card:nth-child(1) { --i:1; }
-        .stat-card:nth-child(2) { --i:2; }
-        .stat-card:nth-child(3) { --i:3; }
-        .stat-card:nth-child(4) { --i:4; }
-
-        @keyframes statSlideIn {
-            0% { opacity: 0; transform: translateY(40px) rotateX(10deg); }
-            100% { opacity: 1; transform: translateY(0) rotateX(0); }
+            transition: all 0.4s;
+            opacity: 0;
+            transform: translateY(30px);
         }
 
         .stat-card:hover {
-            transform: scale(1.05) translateY(-8px) rotateY(5deg);
-            background: rgba(255,255,255,0.5);
-            box-shadow: 0 35px 45px -15px #667eea;
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(20, 25, 45, 0.6);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 30px -10px rgba(102, 126, 234, 0.3);
         }
 
-        .stat-icon { font-size: 34px; color: #667eea; margin-bottom: 10px; }
+        .stat-icon {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
 
-        /* মিনিস্টার কার্ড */
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* মিনিস্টার কার্ড - সিনেমাটিক */
         .minister-card {
-            background: linear-gradient(145deg, #1e293b, #0f172a, #2d3748);
-            background-size: 200% auto;
-            color: white;
-            padding: 35px 30px;
-            border-radius: 40px;
-            margin: 35px 0;
+            background: linear-gradient(135deg, #0f1629, #1a1f35);
+            border-radius: 48px;
+            padding: 40px 35px;
+            margin: 40px 0;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 35px 50px -15px #0f172a;
-            animation: glowPulse 4s infinite, gradientShift 8s ease infinite;
-            border: 1px solid rgba(255,215,0,0.2);
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 25px 45px -15px #1e293b; }
-            50% { box-shadow: 0 40px 70px -10px #764ba2; }
-        }
-
-        .minister-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(255,215,0,0.2) 0%, transparent 70%);
-            opacity: 0.5;
-            animation: rotateBg 15s linear infinite;
+            opacity: 0;
+            transform: scale(0.95);
         }
 
         .minister-card::before {
@@ -521,40 +453,48 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,215,0,0.1) 50%, transparent 70%);
-            background-size: 200% 200%;
-            animation: shineMove 4s ease infinite;
+            background: radial-gradient(circle at 30% 30%, rgba(102, 126, 234, 0.2), transparent 70%);
+            animation: pulseRadial 4s ease-in-out infinite;
         }
 
-        @keyframes shineMove {
-            0% { background-position: 200% 200%; }
-            100% { background-position: -100% -100%; }
+        @keyframes pulseRadial {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
         }
 
-        /* ট্যাব স্টাইল */
+        .minister-card h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #fbbf24;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ট্যাব নেভিগেশন */
         .tabs {
             display: flex;
             overflow-x: auto;
-            gap: 12px;
-            padding: 10px 0 25px;
-            margin-bottom: 20px;
+            gap: 15px;
+            padding: 15px 0 25px;
+            margin-bottom: 25px;
             scrollbar-width: none;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         .tab-btn {
-            padding: 14px 26px;
+            padding: 15px 30px;
             border: none;
-            background: rgba(255,255,255,0.3);
-            backdrop-filter: blur(8px);
+            background: rgba(10, 15, 30, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 60px;
             font-size: 16px;
-            font-weight: 600;
-            color: #1e293b;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.5s;
-            border: 1px solid rgba(255,255,255,0.7);
-            box-shadow: 0 8px 18px -6px rgba(0,0,0,0.1);
+            transition: all 0.4s;
             position: relative;
             overflow: hidden;
         }
@@ -565,10 +505,11 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 2px;
             background: linear-gradient(90deg, #667eea, #764ba2);
             transform: scaleX(0);
             transition: transform 0.4s;
+            transform-origin: left;
         }
 
         .tab-btn:hover::after {
@@ -576,98 +517,81 @@
         }
 
         .tab-btn.active {
-            background: linear-gradient(145deg, #667eea, #764ba2);
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
             color: white;
-            border-color: transparent;
-            box-shadow: 0 15px 25px -8px #667eea;
-            transform: scale(1.05);
         }
 
         /* ট্যাব কন্টেন্ট */
         .tab-pane {
             display: none;
-            animation: slideFade 0.6s ease;
+            animation: fadeSlideIn 0.6s ease forwards;
         }
 
-        .tab-pane.active { display: block; }
+        .tab-pane.active {
+            display: block;
+        }
 
-        @keyframes slideFade {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         /* টাইমলাইন */
         .timeline-item {
-            background: rgba(255,255,255,0.5);
-            backdrop-filter: blur(8px);
-            padding: 22px;
+            background: rgba(10, 15, 30, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 25px;
             border-radius: 30px;
-            margin-bottom: 18px;
-            box-shadow: 0 15px 25px -12px rgba(0,0,0,0.15);
-            border-left: 6px solid #667eea;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
             transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(102,126,234,0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.8s;
-        }
-
-        .timeline-item:hover::before {
-            transform: translateX(100%);
         }
 
         .timeline-item:hover {
-            transform: translateX(8px) scale(1.01);
-            border-left-color: #764ba2;
+            transform: translateX(10px);
+            border-left-color: #fbbf24;
         }
 
         /* গ্যালারি */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+            gap: 20px;
         }
 
         @media (min-width: 640px) {
-            .gallery-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .gallery-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 25px;
+            }
         }
 
         .gallery-item {
             border-radius: 30px;
             overflow: hidden;
             aspect-ratio: 1;
-            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.25);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
+            opacity: 0;
+            transform: scale(0.8);
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 1s, filter 0.5s;
-            filter: brightness(1);
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.05) rotateY(5deg) rotateX(2deg);
-            box-shadow: 0 40px 50px -15px #667eea;
-            z-index: 10;
+            transition: transform 0.8s;
         }
 
         .gallery-item:hover img {
             transform: scale(1.15);
-            filter: brightness(1.1);
         }
 
         .gallery-overlay {
@@ -675,144 +599,155 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
             color: white;
-            padding: 15px;
-            font-size: 14px;
+            padding: 20px;
             transform: translateY(100%);
-            transition: transform 0.5s;
-            backdrop-filter: blur(3px);
+            transition: transform 0.4s;
+            backdrop-filter: blur(5px);
         }
 
         .gallery-item:hover .gallery-overlay {
             transform: translateY(0);
         }
 
-        /* যোগাযোগ কার্ড */
+        /* যোগাযোগ আইটেম */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 480px) {
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         .contact-item {
-            background: rgba(255,255,255,0.3);
-            backdrop-filter: blur(8px);
-            padding: 18px;
+            background: rgba(10, 15, 30, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
             border-radius: 30px;
             display: flex;
             align-items: center;
-            gap: 16px;
-            box-shadow: 0 12px 22px -10px rgba(0,0,0,0.15);
-            transition: all 0.5s;
-            border: 1px solid rgba(255,255,255,0.6);
+            gap: 15px;
+            transition: all 0.4s;
+            opacity: 0;
+            transform: translateX(-30px);
         }
 
         .contact-item:hover {
-            background: white;
-            transform: scale(1.03) translateY(-4px) rotateX(2deg);
-            box-shadow: 0 25px 35px -12px #667eea;
+            background: rgba(20, 25, 45, 0.5);
+            border-color: rgba(102, 126, 234, 0.3);
+            transform: translateX(5px) translateY(-2px);
         }
 
-        /* সোশ্যাল আইকন */
+        /* সোশ্যাল লিংক */
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 22px;
-            margin: 45px 0 25px;
-            perspective: 500px;
+            gap: 25px;
+            margin: 50px 0 30px;
         }
 
         .social-icon {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 28px;
             color: white;
-            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 15px 25px -8px currentColor;
-            transform-style: preserve-3d;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
         }
 
         .social-icon:hover {
-            transform: rotateY(360deg) rotateX(10deg) scale(1.2);
-            box-shadow: 0 25px 35px -5px currentColor;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 20px 30px -5px currentColor;
         }
 
         .facebook { background: #1877f2; }
-        .instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); background-size: 200% auto; }
+        .instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); }
         .twitter { background: #1DA1F2; }
         .linkedin { background: #0077b5; }
 
         /* ফুটার */
         .footer {
             text-align: center;
-            padding: 35px 0 15px;
-            color: #475569;
+            padding: 40px 0 20px;
+            color: rgba(255, 255, 255, 0.5);
             font-size: 14px;
-            animation: fadeUp 1.5s;
-            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
-        .footer p {
-            margin: 5px 0;
-            text-shadow: 0 2px 5px rgba(255,255,255,0.5);
+        /* লোডিং অ্যানিমেশন */
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #ff6b6b, #4ecdc4);
+            background-size: 300% 100%;
+            animation: loadingProgress 2s ease-in-out infinite;
+            z-index: 9999;
         }
 
-        /* টাইপরাইটার ইফেক্ট */
-        .typewriter {
-            overflow: hidden;
-            white-space: nowrap;
-            margin: 0 auto;
-            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-            border-right: 2px solid #667eea;
-            display: inline-block;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: #667eea; }
+        @keyframes loadingProgress {
+            0% { background-position: 0% 50%; width: 0%; }
+            50% { background-position: 100% 50%; width: 100%; }
+            100% { background-position: 200% 50%; width: 0%; }
         }
     </style>
 </head>
 <body>
-    <!-- পার্টিকেল ব্যাকগ্রাউন্ড -->
-    <div id="particles-js"></div>
+    <!-- লোডিং বার -->
+    <div class="loading-bar"></div>
 
-    <!-- কাস্টম কার্সর -->
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
+    <!-- ক্যানভাস ব্যাকগ্রাউন্ড -->
+    <canvas id="canvas-bg"></canvas>
 
     <div class="container">
         <!-- হিরো সেকশন -->
-        <div class="glass-card" data-aos="fade-up" data-aos-duration="1000">
+        <div class="glass-card" id="hero-card">
             <div class="hero">
                 <div class="profile-wrapper">
+                    <div class="floating-particles">
+                        <div class="particle" style="top: 20%; left: 30%;"></div>
+                        <div class="particle" style="top: 60%; left: 70%;"></div>
+                        <div class="particle" style="top: 30%; left: 80%;"></div>
+                        <div class="particle" style="top: 70%; left: 20%;"></div>
+                    </div>
+                    <div class="orbit-ring"></div>
+                    <div class="orbit-ring"></div>
+                    <div class="holographic-ring"></div>
                     <img src="https://images.unsplash.com/vector-1772491260570-8112216d1196?q=80&w=734&auto=format&fit=crop" alt="M A Halim Rahi" class="profile-img">
-                    <div class="profile-glow"></div>
-                    <div class="profile-glow-secondary"></div>
-                    <div class="verified-badge"><i class="fas fa-check"></i></div>
                 </div>
-                <div class="hero-content">
-                    <h1 class="typewriter">এম এ হালিম রাহি</h1>
-                    <div class="hero-tags">
+                <div class="hero-content" id="hero-content">
+                    <h1 class="glitch-text">এম এ হালিম রাহি</h1>
+                    <div class="hero-tags" id="hero-tags">
                         <span class="hero-tag"><i class="fas fa-briefcase"></i> উদ্যোক্তা</span>
                         <span class="hero-tag"><i class="fas fa-gavel"></i> মানবাধিকার কর্মী</span>
                         <span class="hero-tag"><i class="fas fa-users"></i> ছাত্রনেতা</span>
                         <span class="hero-tag"><i class="fas fa-hand-fist"></i> ২৪'র গণঅভ্যুত্থানের সৈনিক</span>
                     </div>
-                    <div class="movement-badge animate__animated animate__pulse animate__infinite">
+                    <div class="movement-badge" id="movement-badge">
                         <i class="fas fa-flag"></i> ১৮' কোটা আন্দোলন | ২৪' গণঅভ্যুত্থান
                     </div>
-                    <div class="quote" data-aos="zoom-in" data-aos-delay="200">
-                        <i class="fas fa-quote-left" style="color: #667eea; font-size: 20px;"></i>
-                        "গ্রামের মাটি থেকে উঠে আসা একটি নাম, সংগ্রামই আমার অস্ত্র, সততাই আমার পাথেয়। ... মানবতার সেবায়, দেশের সেবায় নিজেকে নিয়োজিত রাখব—এটাই আমার অঙ্গীকার।"
-                        <i class="fas fa-quote-right" style="color: #667eea; float: right; font-size: 20px;"></i>
+                    <div class="quote" id="quote">
+                        <i class="fas fa-quote-left" style="color: #667eea; opacity: 0.5;"></i>
+                        "গ্রামের মাটি থেকে উঠে আসা একটি নাম, সংগ্রামই আমার অস্ত্র, সততাই আমার পাথেয়। মানবতার সেবায়, দেশের সেবায় নিজেকে নিয়োজিত রাখব—এটাই আমার অঙ্গীকার।"
+                        <i class="fas fa-quote-right" style="color: #667eea; opacity: 0.5; float: right;"></i>
                     </div>
-                    <div class="button-group">
-                        <a href="https://facebook.com/mahrahi13" target="_blank" class="btn btn-primary animate__animated animate__heartBeat animate__delay-1s"><i class="fab fa-facebook-f"></i> ফেসবুকে ফলো করুন</a>
+                    <div class="button-group" id="button-group">
+                        <a href="https://facebook.com/mahrahi13" target="_blank" class="btn btn-primary"><i class="fab fa-facebook-f"></i> ফেসবুকে ফলো করুন</a>
                         <a href="#contact" class="btn btn-outline"><i class="fas fa-envelope"></i> যোগাযোগ</a>
                     </div>
                 </div>
@@ -820,24 +755,23 @@
         </div>
 
         <!-- স্ট্যাটস গ্রিড -->
-        <div class="stats-grid">
-            <div class="stat-card" data-aos="flip-left" data-aos-delay="100"><div class="stat-icon"><i class="fas fa-calendar-alt"></i></div><div class="stat-number">২০০৫</div><div class="stat-label">জন্ম</div></div>
-            <div class="stat-card" data-aos="flip-left" data-aos-delay="200"><div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div><div class="stat-number">জকিগঞ্জ</div><div class="stat-label">মাতৃভূমি</div></div>
-            <div class="stat-card" data-aos="flip-left" data-aos-delay="300"><div class="stat-icon"><i class="fas fa-briefcase"></i></div><div class="stat-number">৩+</div><div class="stat-label">প্রতিষ্ঠান</div></div>
-            <div class="stat-card" data-aos="flip-left" data-aos-delay="400"><div class="stat-icon"><i class="fas fa-flag"></i></div><div class="stat-number">২টি</div><div class="stat-label">গণআন্দোলন</div></div>
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar-alt"></i></div><div class="stat-number">২০০৫</div><div class="stat-label">জন্ম</div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div><div class="stat-number">জকিগঞ্জ</div><div class="stat-label">মাতৃভূমি</div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-briefcase"></i></div><div class="stat-number">৩+</div><div class="stat-label">প্রতিষ্ঠান</div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-flag"></i></div><div class="stat-number">২টি</div><div class="stat-label">গণআন্দোলন</div></div>
         </div>
 
         <!-- মিনিস্টার সেকশন -->
-        <div class="minister-card" data-aos="fade-right" data-aos-duration="1200">
+        <div class="minister-card" id="minister-card">
             <h3><i class="fas fa-crown" style="color: #fbbf24;"></i> মাননীয় প্রতিমন্ত্রী নূরুল হক নূর</h3>
             <p>প্রবাসী কল্যাণ ও বৈদেশিক কর্মসংস্থান প্রতিমন্ত্রী, বাংলাদেশ সরকার</p>
             <p><i class="fas fa-users" style="color: #fbbf24;"></i> সভাপতি, বাংলাদেশ গণ অধিকার পরিষদ</p>
             <p style="font-style: italic;">"তাঁর নেতৃত্বে আমরা ১৮'র কোটা আন্দোলন থেকে ২৪'র গণঅভ্যুত্থান পর্যন্ত মাঠে ছিলাম।"</p>
-            <div class="minister-badge"><i class="fas fa-check-circle"></i> প্রবাসী কল্যাণ ও বৈদেশিক কর্মসংস্থান মন্ত্রণালয়</div>
         </div>
 
         <!-- ট্যাব নেভিগেশন -->
-        <div class="tabs" data-aos="fade-up">
+        <div class="tabs" id="tabs">
             <button class="tab-btn active" onclick="showTab('about')">পরিচিতি</button>
             <button class="tab-btn" onclick="showTab('movement')">আন্দোলন</button>
             <button class="tab-btn" onclick="showTab('business')">ব্যবসা</button>
@@ -848,43 +782,51 @@
 
         <!-- ট্যাব কন্টেন্ট -->
         <div id="about" class="tab-pane active">
-            <div class="glass-card" data-aos="fade-up">
-                <h2><i class="fas fa-user-circle" style="color: #667eea;"></i> জীবন ও পরিচিতি</h2>
+            <div class="glass-card">
+                <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-user-circle" style="color: #667eea;"></i> জীবন ও পরিচিতি</h2>
                 <p>এম এ হালিম রাহি সিলেটের জকিগঞ্জে ২০০৫ সালে জন্মগ্রহণ করেন। শৈশব থেকেই সামাজিক ও রাজনৈতিক কর্মকাণ্ডের সাথে যুক্ত।</p>
-                <h3>শিক্ষাজীবন</h3>
-                <div class="timeline-item"><span class="timeline-date">চলমান</span><strong>ইছামতি ডিগ্রি কলেজ</strong><p>উচ্চ মাধ্যমিক</p></div>
-                <div class="timeline-item"><span class="timeline-date">সম্পূর্ণ</span><strong>গোলাম মোস্তফা চৌধুরী একাডেমী</strong><p>মাধ্যমিক</p></div>
+                <h3 style="margin: 25px 0 15px;">শিক্ষাজীবন</h3>
+                <div class="timeline-item"><span class="timeline-date">চলমান-</span><strong>ইছামতি ডিগ্রি কলেজ</strong><p>উচ্চ মাধ্যমিক</p></div>
+                <div class="timeline-item"><span class="timeline-date">সম্পূর্ণ-</span><strong>গোলাম মোস্তফা চৌধুরী একাডেমী</strong><p>মাধ্যমিক</p></div>
             </div>
         </div>
 
         <div id="movement" class="tab-pane">
-            <div class="glass-card" data-aos="fade-up">
-                <h2><i class="fas fa-flag" style="color: #dc2626;"></i> আন্দোলন-সংগ্রাম</h2>
-                <div style="background:rgba(239,68,68,0.15);padding:20px;border-radius:25px;margin-bottom:15px;" data-aos="fade-right">
-                    <h3 style="color:#b91c1c;">২০১৮ কোটাবিরোধী আন্দোলন</h3>
+            <div class="glass-card">
+                <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-flag" style="color: #dc2626;"></i> আন্দোলন-সংগ্রাম</h2>
+                <div style="background: rgba(239,68,68,0.1); padding: 25px; border-radius: 30px; margin-bottom: 20px;">
+                    <h3 style="color: #ef4444;">২০১৮ কোটাবিরোধী আন্দোলন</h3>
                     <p>সক্রিয় অংশগ্রহণ, মিছিল-মিটিংয়ে নেতৃত্ব।</p>
                 </div>
-                <div style="background:rgba(185,28,28,0.15);padding:20px;border-radius:25px;" data-aos="fade-left">
-                    <h3 style="color:#b91c1c;">২০২৪ গণঅভ্যুত্থান</h3>
+                <div style="background: rgba(185,28,28,0.1); padding: 25px; border-radius: 30px;">
+                    <h3 style="color: #b91c1c;">২০২৪ গণঅভ্যুত্থান</h3>
                     <p>বৈষম্যবিরোধী আন্দোলনে ছাত্র অধিকার পরিষদের সাথে সক্রিয় ভূমিকা।</p>
                 </div>
             </div>
         </div>
 
         <div id="business" class="tab-pane">
-            <div class="glass-card" data-aos="fade-up">
-                <h2><i class="fas fa-briefcase" style="color: #667eea;"></i> ব্যবসায়িক উদ্যোগ</h2>
-                <div class="info-grid">
-                    <div class="info-card" data-aos="zoom-in"><i class="fas fa-plane"></i><h4>সাকসেস ইনকর্পোরেটেড</h4><p>সিইও (ট্রাভেল এজেন্সি)</p></div>
-                    <div class="info-card" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-utensils"></i><h4>চিকেন হাট</h4><p>সহ-মালিক</p></div>
+            <div class="glass-card">
+                <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-briefcase" style="color: #667eea;"></i> ব্যবসায়িক উদ্যোগ</h2>
+                <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="info-card" style="background: rgba(10,15,30,0.3); padding: 25px; border-radius: 30px;">
+                        <i class="fas fa-plane" style="font-size: 40px; color: #667eea;"></i>
+                        <h4 style="margin: 15px 0;">সাকসেস ইনকর্পোরেটেড</h4>
+                        <p>সিইও (ট্রাভেল এজেন্সি)</p>
+                    </div>
+                    <div class="info-card" style="background: rgba(10,15,30,0.3); padding: 25px; border-radius: 30px;">
+                        <i class="fas fa-utensils" style="font-size: 40px; color: #667eea;"></i>
+                        <h4 style="margin: 15px 0;">চিকেন হাট</h4>
+                        <p>সহ-মালিক</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="social" class="tab-pane">
-            <div class="glass-card" data-aos="fade-up">
-                <h2><i class="fas fa-gavel" style="color: #667eea;"></i> সামাজিক কর্ম</h2>
-                <div style="background:rgba(255,255,255,0.5);padding:20px;border-radius:25px;" data-aos="flip-up">
+            <div class="glass-card">
+                <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-gavel" style="color: #667eea;"></i> সামাজিক কর্ম</h2>
+                <div style="background: rgba(10,15,30,0.3); padding: 25px; border-radius: 30px;">
                     <h3>বাংলাদেশ মানবাধিকার বাস্তবায়ন ফাউন্ডেশন</h3>
                     <p><strong>দপ্তর সম্পাদক, জকিগঞ্জ উপজেলা</strong> (২০২৫-২০২৭)</p>
                 </div>
@@ -892,9 +834,9 @@
         </div>
 
         <div id="political" class="tab-pane">
-            <div class="glass-card" data-aos="fade-up">
-                <h2><i class="fas fa-hand-fist" style="color: #667eea;"></i> রাজনৈতিক পরিচিতি</h2>
-                <div style="background:rgba(255,255,255,0.5);padding:20px;border-radius:25px;" data-aos="flip-down">
+            <div class="glass-card">
+                <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-hand-fist" style="color: #667eea;"></i> রাজনৈতিক পরিচিতি</h2>
+                <div style="background: rgba(10,15,30,0.3); padding: 25px; border-radius: 30px;">
                     <h3>বাংলাদেশ ছাত্র অধিকার পরিষদ</h3>
                     <p>অঙ্গ সংগঠন, বাংলাদেশ গণ অধিকার পরিষদ। নূরুল হক নূর ও হাসান আল মামুনের নেতৃত্বে কাজ করছি।</p>
                 </div>
@@ -902,126 +844,288 @@
         </div>
 
         <div id="gallery" class="tab-pane">
-            <div class="glass-card" data-aos="fade-up">
-                <h2><i class="fas fa-images" style="color: #667eea;"></i> গ্যালারি</h2>
+            <div class="glass-card">
+                <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-images" style="color: #667eea;"></i> গ্যালারি</h2>
                 <div class="gallery-grid">
-                    <div class="gallery-item" data-aos="flip-left"><img src="https://scontent.fdac142-1.fna.fbcdn.net/v/t39.30808-6/491759794_2349590068774961_4741090519797113513_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=100&ccb=1-7&_nc_sid=b895b5&_nc_eui2=AeESlGNdijPmouABUv3Nrp-vEQ--hlpzr4cRD76GWnOvh-uR4HbBmLJFsJuzP5ifNHHR_zslkzIJk6-47wFNPkyg&_nc_ohc=UXPc6GduYWAQ7kNvwHhzmry&_nc_oc=Adkc_nbrTQRW2LH52IXP8pgiCBOXJRCA3j4GfjhgXopDo3-amFO2Kn-trgOAPdjQ52A&_nc_zt=23&_nc_ht=scontent.fdac142-1.fna&_nc_gid=1vlqvvypAG9OBorP8_3ukA&_nc_ss=8&oh=00_Afy4PufGs5xBLqvHF0HGm0162NanPo2yxjoyZyQm1w_tlw&oe=69ABCD75" alt="Team"><div class="gallery-overlay">গণ অধিকার পরিষদ</div></div>
-                    <div class="gallery-item" data-aos="flip-left" data-aos-delay="100"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=400&h=400&fit=crop" alt="Rally"><div class="gallery-overlay">মানবাধিকার সভা</div></div>
-                    <div class="gallery-item" data-aos="flip-left" data-aos-delay="200"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=400&fit=crop" alt="Protest"><div class="gallery-overlay">ছাত্র আন্দোলন</div></div>
-                    <div class="gallery-item" data-aos="flip-left" data-aos-delay="300"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop" alt="Business"><div class="gallery-overlay">চিকেন হাট</div></div>
+                    <div class="gallery-item"><img src="https://scontent.fdac142-1.fna.fbcdn.net/v/t39.30808-6/491759794_2349590068774961_4741090519797113513_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=100&ccb=1-7&_nc_sid=b895b5&_nc_eui2=AeESlGNdijPmouABUv3Nrp-vEQ--hlpzr4cRD76GWnOvh-uR4HbBmLJFsJuzP5ifNHHR_zslkzIJk6-47wFNPkyg&_nc_ohc=UXPc6GduYWAQ7kNvwHhzmry&_nc_oc=Adkc_nbrTQRW2LH52IXP8pgiCBOXJRCA3j4GfjhgXopDo3-amFO2Kn-trgOAPdjQ52A&_nc_zt=23&_nc_ht=scontent.fdac142-1.fna&_nc_gid=1vlqvvypAG9OBorP8_3ukA&_nc_ss=8&oh=00_Afy4PufGs5xBLqvHF0HGm0162NanPo2yxjoyZyQm1w_tlw&oe=69ABCD75" alt="Team"><div class="gallery-overlay">গণ অধিকার পরিষদ</div></div>
+                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=400&h=400&fit=crop" alt="Rally"><div class="gallery-overlay">মানবাধিকার সভা</div></div>
+                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=400&fit=crop" alt="Protest"><div class="gallery-overlay">ছাত্র আন্দোলন</div></div>
+                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop" alt="Business"><div class="gallery-overlay">চিকেন হাট</div></div>
                 </div>
             </div>
         </div>
 
         <!-- যোগাযোগ -->
-        <div id="contact" class="glass-card" data-aos="fade-up" data-aos-duration="1200">
-            <h2><i class="fas fa-address-card" style="color: #667eea;"></i> যোগাযোগ</h2>
+        <div id="contact" class="glass-card">
+            <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-address-card" style="color: #667eea;"></i> যোগাযোগ</h2>
             <div class="contact-grid">
-                <div class="contact-item" data-aos="fade-right"><i class="fas fa-phone"></i><span>+8809643776654</span></div>
-                <div class="contact-item" data-aos="fade-right" data-aos-delay="100"><i class="fas fa-phone-alt"></i><span>+8801799072987</span></div>
-                <div class="contact-item" data-aos="fade-right" data-aos-delay="200"><i class="fas fa-envelope"></i><span>halimrahi641@gmail.com</span></div>
-                <div class="contact-item" data-aos="fade-right" data-aos-delay="300"><i class="fab fa-facebook"></i><span>fb.com/mahrahi13</span></div>
+                <div class="contact-item"><i class="fas fa-phone" style="color: #667eea;"></i><span>+8809643776654</span></div>
+                <div class="contact-item"><i class="fas fa-phone-alt" style="color: #667eea;"></i><span>+8801799072987</span></div>
+                <div class="contact-item"><i class="fas fa-envelope" style="color: #667eea;"></i><span>halimrahi641@gmail.com</span></div>
+                <div class="contact-item"><i class="fab fa-facebook" style="color: #667eea;"></i><span>fb.com/mahrahi13</span></div>
             </div>
-            <div style="margin-top:25px; background:rgba(255,255,255,0.3); padding:18px; border-radius:25px;" data-aos="zoom-in">
-                <p><i class="fas fa-map-marker-alt" style="color:#667eea;"></i> এন.কে. টাওয়ার, শাহজালাল উপশহর, সিলেট</p>
+            <div style="margin-top: 25px; background: rgba(10,15,30,0.3); padding: 20px; border-radius: 30px;">
+                <p><i class="fas fa-map-marker-alt" style="color: #667eea;"></i> এন.কে. টাওয়ার, শাহজালাল উপশহর, সিলেট</p>
             </div>
         </div>
 
         <!-- সোশ্যাল লিংক -->
         <div class="social-links">
-            <a href="https://facebook.com/mahrahi13" target="_blank" class="social-icon facebook animate__animated animate__bounceIn" data-aos="zoom-in"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.instagram.com/mahrahi13" target="_blank" class="social-icon instagram animate__animated animate__bounceIn" data-aos="zoom-in" data-aos-delay="100"><i class="fab fa-instagram"></i></a>
-            <a href="https://x.com/mahrahi13" target="_blank" class="social-icon twitter animate__animated animate__bounceIn" data-aos="zoom-in" data-aos-delay="200"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-icon linkedin animate__animated animate__bounceIn" data-aos="zoom-in" data-aos-delay="300"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://facebook.com/mahrahi13" target="_blank" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/mahrahi13" target="_blank" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://x.com/mahrahi13" target="_blank" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
         </div>
 
         <!-- ফুটার -->
-        <div class="footer" data-aos="fade-up">
+        <div class="footer">
             <p>© ২০২৪ এম এ হালিম রাহি | উদ্যোক্তা, মানবাধিকার কর্মী ও ছাত্রনেতা</p>
-            <p>১৮'র কোটাবিরোধী আন্দোলন ও ২৪'র গণঅভ্যুত্থানের সক্রিয় সৈনিক</p>
+            <p style="margin-top: 10px;">১৮'র কোটাবিরোধী আন্দোলন ও ২৪'র গণঅভ্যুত্থানের সক্রিয় সৈনিক</p>
         </div>
     </div>
 
-    <!-- স্ক্রিপ্ট -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // AOS initialization
-        AOS.init({
-            duration: 800,
-            once: false,
-            mirror: true,
-            offset: 50
+        // GSAP এনিমেশন
+        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+        // লোডিং এনিমেশন
+        window.addEventListener('load', () => {
+            // হিরো সেকশন এনিমেশন
+            gsap.to('.loading-bar', {
+                opacity: 0,
+                duration: 0.5,
+                delay: 2,
+                ease: 'power2.out'
+            });
+
+            // কার্ড রিভিল এনিমেশন
+            gsap.to('.glass-card', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: 'power3.out',
+                onComplete: () => {
+                    document.querySelectorAll('.glass-card').forEach(card => {
+                        card.classList.add('revealed');
+                    });
+                }
+            });
+
+            // হিরো কন্টেন্ট এনিমেশন
+            gsap.to('#hero-content', {
+                opacity: 1,
+                x: 0,
+                duration: 1.2,
+                delay: 0.5,
+                ease: 'power3.out'
+            });
+
+            // ট্যাগ এনিমেশন
+            gsap.to('.hero-tag', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                delay: 1,
+                ease: 'back.out(1.7)'
+            });
+
+            // মুভমেন্ট ব্যাজ এনিমেশন
+            gsap.to('#movement-badge', {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                delay: 1.5,
+                ease: 'elastic.out(1, 0.5)'
+            });
+
+            // কোট এনিমেশন
+            gsap.to('#quote', {
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                delay: 1.8,
+                ease: 'power3.out'
+            });
+
+            // বাটন এনিমেশন
+            gsap.to('.btn', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                delay: 2.2,
+                ease: 'power3.out'
+            });
+
+            // স্ট্যাটস কার্ড এনিমেশন
+            gsap.to('.stat-card', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                delay: 2.5,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '#stats-grid',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            // মিনিস্টার কার্ড এনিমেশন
+            gsap.to('#minister-card', {
+                opacity: 1,
+                scale: 1,
+                duration: 1,
+                delay: 2.8,
+                ease: 'back.out(1.4)',
+                scrollTrigger: {
+                    trigger: '#minister-card',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            // ট্যাব এনিমেশন
+            gsap.to('#tabs', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: 3,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '#tabs',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            // কন্টাক্ট আইটেম এনিমেশন
+            gsap.to('.contact-item', {
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                delay: 3.2,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '#contact',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            // গ্যালারি আইটেম এনিমেশন
+            gsap.to('.gallery-item', {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                stagger: 0.1,
+                delay: 3.5,
+                ease: 'back.out(1.4)',
+                scrollTrigger: {
+                    trigger: '.gallery-grid',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            // সোশ্যাল আইকন এনিমেশন
+            gsap.to('.social-icon', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                delay: 3.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.social-links',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            // ফুটার এনিমেশন
+            gsap.to('.footer', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: 4,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.footer',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
         });
 
-        // Particles.js
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 60, density: { enable: true, value_area: 800 } },
-                color: { value: '#667eea' },
-                shape: { type: 'circle' },
-                opacity: { value: 0.5, random: true },
-                size: { value: 3, random: true },
-                line_linked: { enable: true, distance: 150, color: '#667eea', opacity: 0.3, width: 1 },
-                move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } }
-            },
-            retina_detect: true
-        });
-
-        // Custom cursor
-        const cursor = document.querySelector('.cursor');
-        const follower = document.querySelector('.cursor-follower');
-
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            follower.style.left = e.clientX + 'px';
-            follower.style.top = e.clientY + 'px';
-        });
-
-        document.addEventListener('mouseenter', () => {
-            cursor.style.opacity = 1;
-            follower.style.opacity = 1;
-        });
-
-        document.addEventListener('mouseleave', () => {
-            cursor.style.opacity = 0;
-            follower.style.opacity = 0;
-        });
-
-        // Tab functionality
+        // ট্যাব ফাংশন
         function showTab(tabId) {
-            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
-            
-            // Trigger AOS refresh for new content
-            setTimeout(() => AOS.refresh(), 100);
         }
 
-        // 3D tilt effect on glass cards
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
-            });
+        // ক্যানভাস ব্যাকগ্রাউন্ড
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
 
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // স্টার ফিল্ড
+        const stars = [];
+        for (let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2,
+                speed: Math.random() * 0.5 + 0.1,
+                angle: Math.random() * Math.PI * 2
             });
-        });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // স্টার আঁকা
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.3})`;
+                ctx.fill();
+                
+                // স্টার মুভমেন্ট
+                star.x += Math.cos(star.angle) * star.speed;
+                star.y += Math.sin(star.angle) * star.speed;
+                
+                // রিসেট পজিশন
+                if (star.x < 0 || star.x > canvas.width || star.y < 0 || star.y > canvas.height) {
+                    star.x = Math.random() * canvas.width;
+                    star.y = Math.random() * canvas.height;
+                    star.angle = Math.random() * Math.PI * 2;
+                }
+            });
+            
+            requestAnimationFrame(animate);
+        }
+
+        animate();
     </script>
 </body>
 </html>
