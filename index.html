@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Animate.css (for extra animations) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,59 +21,121 @@
 
         body {
             font-family: 'Poppins', 'Hind Siliguri', sans-serif;
-            background: #f8fafc;
+            background: radial-gradient(circle at 10% 30%, #f8fafc, #e2e8f0);
             color: #1e293b;
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* মোবাইল ফ্রেন্ডলি ডিজাইন */
+        /* পার্টিকেল ব্যাকগ্রাউন্ড */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 15px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* গ্লাসমর্ফিজম কার্ড - মোবাইল অপ্টিমাইজড */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 25px;
-            padding: 25px 20px;
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
-            margin-bottom: 20px;
+        /* কাস্টম কার্সর */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
             transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
         }
 
-        /* হিরো সেকশন - মোবাইল প্রথমে */
+        /* গ্লাসমর্ফিজম কার্ড - অতি মসৃণ */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 40px;
+            padding: 30px 25px;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255,255,255,0.6) inset;
+            margin-bottom: 25px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: floatIn 1s ease-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(1deg);
+            box-shadow: 0 50px 80px -20px rgba(102, 126, 234, 0.6), 0 0 0 2px rgba(255,255,255,0.8) inset;
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        @keyframes floatIn {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* হিরো সেকশন */
         .hero {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
+            gap: 35px;
         }
 
         @media (min-width: 768px) {
             .hero {
                 flex-direction: row;
-                gap: 40px;
+                gap: 60px;
             }
         }
 
-        /* প্রোফাইল ইমেজ */
+        /* প্রোফাইল ইমেজ - 3D রোটেটর */
         .profile-wrapper {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 200px;
+            height: 200px;
             flex-shrink: 0;
+            transform-style: preserve-3d;
+            animation: float3D 6s infinite ease-in-out;
+        }
+
+        @keyframes float3D {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            25% { transform: translateY(-10px) rotateY(5deg); }
+            75% { transform: translateY(10px) rotateY(-5deg); }
         }
 
         @media (min-width: 768px) {
             .profile-wrapper {
-                width: 220px;
-                height: 220px;
+                width: 280px;
+                height: 280px;
             }
         }
 
@@ -78,31 +144,61 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+            border: 5px solid rgba(255,255,255,0.8);
+            box-shadow: 0 30px 50px -15px rgba(102, 126, 234, 0.5);
             position: relative;
             z-index: 2;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: all 0.5s;
+            filter: brightness(1.05) contrast(1.05);
         }
 
-        /* প্রোফাইল গ্লো ইফেক্ট */
+        .profile-img:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        /* প্রোফাইল মাল্টি-গ্লো ইফেক্ট */
         .profile-glow {
             position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            background: linear-gradient(45deg, #667eea, #764ba2, #ff6b6b, #4ecdc4);
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            background: conic-gradient(from 0deg, #667eea, #764ba2, #ff6b6b, #4ecdc4, #667eea, #fbbf24, #667eea);
             border-radius: 50%;
-            filter: blur(15px);
-            opacity: 0.6;
-            animation: rotate 6s linear infinite;
+            filter: blur(25px);
+            opacity: 0.7;
+            animation: rotateGlow 8s linear infinite, pulseGlowSize 3s ease-in-out infinite;
             z-index: 1;
         }
 
-        @keyframes rotate {
+        .profile-glow-secondary {
+            position: absolute;
+            top: -25px;
+            left: -25px;
+            right: -25px;
+            bottom: -25px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, transparent 70%);
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.4;
+            animation: rotateReverse 12s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotateGlow {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @keyframes rotateReverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+
+        @keyframes pulseGlowSize {
+            0%, 100% { filter: blur(25px); opacity: 0.7; }
+            50% { filter: blur(35px); opacity: 0.9; }
         }
 
         /* ভেরিফাইড ব্যাজ */
@@ -110,340 +206,312 @@
             position: absolute;
             bottom: 15px;
             right: 15px;
-            background: #1DA1F2;
+            background: linear-gradient(145deg, #1DA1F2, #0a7bc1);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
             border: 3px solid white;
             z-index: 3;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            animation: pulse 2s infinite;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: pulseBadge 2.2s infinite, spinBadge 10s linear infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        @keyframes pulseBadge {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(29, 161, 242, 0.7); }
+            70% { transform: scale(1.15); box-shadow: 0 0 25px 15px rgba(29, 161, 242, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(29, 161, 242, 0); }
         }
 
-        /* হিরো কন্টেন্ট */
-        .hero-content {
-            text-align: center;
-        }
-
-        @media (min-width: 768px) {
-            .hero-content {
-                text-align: left;
-            }
+        @keyframes spinBadge {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .hero-content h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1e293b;
+            font-size: 38px;
+            font-weight: 800;
+            background: linear-gradient(145deg, #1e293b, #4a3f6e, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientShift 4s ease infinite;
             margin-bottom: 8px;
-            line-height: 1.2;
         }
 
-        @media (min-width: 768px) {
-            .hero-content h1 {
-                font-size: 48px;
-            }
+        @keyframes gradientShift {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
         }
 
+        /* ট্যাগ অ্যানিমেশন */
         .hero-tags {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
-            margin: 12px 0;
-        }
-
-        @media (min-width: 768px) {
-            .hero-tags {
-                justify-content: flex-start;
-            }
+            gap: 12px;
+            margin: 18px 0;
         }
 
         .hero-tag {
-            background: linear-gradient(135deg, #667eea15, #764ba215);
-            color: #4b5563;
-            padding: 6px 16px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(5px);
+            color: #1e293b;
+            padding: 8px 20px;
             border-radius: 50px;
-            font-size: 13px;
-            font-weight: 500;
-            border: 1px solid #667eea30;
-        }
-
-        @media (min-width: 768px) {
-            .hero-tag {
-                font-size: 15px;
-                padding: 8px 20px;
-            }
-        }
-
-        .hero-tag i {
-            color: #667eea;
-            margin-right: 5px;
-        }
-
-        /* স্পেশাল কোশ্চেন ব্যাজ */
-        .movement-badge {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 50px;
-            display: inline-block;
-            font-weight: 600;
             font-size: 14px;
-            margin: 10px 0;
-            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 8px 16px -8px rgba(0,0,0,0.1);
+            transition: all 0.4s;
+            animation: tagPopIn 0.6s backwards;
+            animation-delay: calc(0.15s * var(--i, 1));
+            position: relative;
+            overflow: hidden;
         }
 
-        @media (min-width: 768px) {
-            .movement-badge {
-                font-size: 16px;
-                padding: 10px 25px;
-            }
+        .hero-tag::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .hero-tag:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .hero-tag:nth-child(1) { --i: 1; }
+        .hero-tag:nth-child(2) { --i: 2; }
+        .hero-tag:nth-child(3) { --i: 3; }
+        .hero-tag:nth-child(4) { --i: 4; }
+
+        @keyframes tagPopIn {
+            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .hero-tag:hover {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 25px -8px #667eea;
+        }
+
+        /* আন্দোলন ব্যাজ */
+        .movement-badge {
+            background: linear-gradient(145deg, #ef4444, #b91c1c, #7f1d1d);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 60px;
+            display: inline-block;
+            font-weight: 700;
+            font-size: 15px;
+            margin: 15px 0;
+            box-shadow: 0 15px 30px -8px rgba(239,68,68,0.6);
+            animation: pulseRed 2.5s infinite, gradientShift 5s ease infinite;
+            background-size: 200% auto;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { box-shadow: 0 15px 30px -8px rgba(239,68,68,0.6); transform: scale(1); }
+            50% { box-shadow: 0 25px 45px -5px rgba(239,68,68,0.9); transform: scale(1.02); }
         }
 
         /* কোট */
         .quote {
             font-size: 16px;
-            color: #4b5563;
+            color: #1e293b;
             font-style: italic;
-            border-left: 4px solid #667eea;
-            padding-left: 15px;
-            margin: 15px 0;
-            background: #f1f5f9;
-            padding: 15px;
-            border-radius: 10px;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(5px);
+            padding: 25px;
+            border-radius: 30px;
+            margin: 20px 0;
+            border-left: 6px solid #667eea;
+            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.2);
+            transition: all 0.5s;
+            position: relative;
+            overflow: hidden;
         }
 
-        @media (min-width: 768px) {
-            .quote {
-                font-size: 18px;
-            }
+        .quote::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .quote:hover::after {
+            opacity: 1;
         }
 
         /* বাটন গ্রুপ */
         .button-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin: 20px 0;
+            gap: 15px;
+            margin: 30px 0 15px;
         }
 
         @media (min-width: 480px) {
-            .button-group {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .button-group {
-                justify-content: flex-start;
-            }
+            .button-group { flex-direction: row; }
         }
 
         .btn {
-            padding: 12px 24px;
-            border-radius: 50px;
+            padding: 16px 32px;
+            border-radius: 60px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 15px;
-            transition: all 0.3s ease;
+            font-size: 16px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 12px;
             border: none;
             cursor: pointer;
-            width: 100%;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
 
-        @media (min-width: 480px) {
-            .btn {
-                width: auto;
-                flex: 1;
-            }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.8s, height 0.8s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(145deg, #667eea, #5a67d8, #4c51bf);
+            background-size: 200% auto;
             color: white;
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 30px -8px #667eea;
+            animation: gradientShift 4s ease infinite;
         }
 
         .btn-outline {
-            background: transparent;
-            border: 2px solid #667eea;
-            color: #4b5563;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(102, 126, 234, 0.8);
+            color: #1e293b;
         }
 
-        /* স্ট্যাটস গ্রিড - মোবাইল গ্রিড */
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 30px -10px #667eea;
+        }
+
+        /* স্ট্যাটস গ্রিড */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 20px 0;
+            gap: 18px;
+            margin: 30px 0;
         }
 
         @media (min-width: 640px) {
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 15px;
-            }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; }
         }
 
         .stat-card {
-            background: white;
-            padding: 15px 10px;
-            border-radius: 16px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            padding: 22px 15px;
+            border-radius: 35px;
             text-align: center;
-            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.1);
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 25px 35px -15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.7);
+            transition: all 0.5s;
+            animation: statSlideIn 0.7s backwards;
+            animation-delay: calc(0.1s * var(--i, 1));
+            transform-style: preserve-3d;
         }
 
-        .stat-icon {
-            font-size: 24px;
-            color: #667eea;
-            margin-bottom: 6px;
+        .stat-card:nth-child(1) { --i:1; }
+        .stat-card:nth-child(2) { --i:2; }
+        .stat-card:nth-child(3) { --i:3; }
+        .stat-card:nth-child(4) { --i:4; }
+
+        @keyframes statSlideIn {
+            0% { opacity: 0; transform: translateY(40px) rotateX(10deg); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0); }
         }
 
-        .stat-number {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 2px;
+        .stat-card:hover {
+            transform: scale(1.05) translateY(-8px) rotateY(5deg);
+            background: rgba(255,255,255,0.5);
+            box-shadow: 0 35px 45px -15px #667eea;
         }
 
-        .stat-label {
-            color: #64748b;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .stat-icon { font-size: 34px; color: #667eea; margin-bottom: 10px; }
 
-        @media (min-width: 768px) {
-            .stat-icon { font-size: 32px; }
-            .stat-number { font-size: 26px; }
-            .stat-label { font-size: 12px; }
-        }
-
-        /* সেকশন টাইটেল */
-        .section-title {
-            font-size: 26px;
-            font-weight: 700;
-            text-align: center;
-            margin: 35px 0 25px;
-            color: #1e293b;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70px;
-            height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 2px;
-        }
-
-        @media (min-width: 768px) {
-            .section-title {
-                font-size: 36px;
-                margin: 50px 0 30px;
-            }
-            .section-title::after {
-                width: 100px;
-                height: 4px;
-            }
-        }
-
-        /* ট্যাব সিস্টেম - মোবাইল স্ক্রলেবল */
-        .tabs {
-            display: flex;
-            overflow-x: auto;
-            gap: 8px;
-            padding: 5px 0 15px;
-            margin-bottom: 15px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tab-btn {
-            padding: 10px 18px;
-            border: none;
-            background: white;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-color: transparent;
-        }
-
-        @media (min-width: 768px) {
-            .tabs {
-                justify-content: center;
-                overflow-x: visible;
-                flex-wrap: wrap;
-            }
-            .tab-btn {
-                padding: 12px 28px;
-                font-size: 16px;
-            }
-        }
-
-        /* ট্যাব কন্টেন্ট */
-        .tab-pane {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .tab-pane.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* মিনিস্টার কার্ড - হাইলাইটেড */
+        /* মিনিস্টার কার্ড */
         .minister-card {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
+            background: linear-gradient(145deg, #1e293b, #0f172a, #2d3748);
+            background-size: 200% auto;
             color: white;
-            padding: 25px 20px;
-            border-radius: 20px;
-            margin: 25px 0;
+            padding: 35px 30px;
+            border-radius: 40px;
+            margin: 35px 0;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+            box-shadow: 0 35px 50px -15px #0f172a;
+            animation: glowPulse 4s infinite, gradientShift 8s ease infinite;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 25px 45px -15px #1e293b; }
+            50% { box-shadow: 0 40px 70px -10px #764ba2; }
+        }
+
+        .minister-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,215,0,0.2) 0%, transparent 70%);
+            opacity: 0.5;
+            animation: rotateBg 15s linear infinite;
         }
 
         .minister-card::before {
@@ -453,155 +521,153 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
-            animation: shine 3s infinite;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,215,0,0.1) 50%, transparent 70%);
+            background-size: 200% 200%;
+            animation: shineMove 4s ease infinite;
         }
 
-        @keyframes shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        @keyframes shineMove {
+            0% { background-position: 200% 200%; }
+            100% { background-position: -100% -100%; }
         }
 
-        .minister-card h3 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: #fbbf24;
-        }
-
-        .minister-card p {
-            color: #e2e8f0;
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-
-        .minister-badge {
-            background: #fbbf24;
-            color: #1e293b;
-            padding: 5px 15px;
-            border-radius: 50px;
-            display: inline-block;
-            font-weight: 700;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        /* টাইমলাইন - মোবাইল */
-        .timeline-item {
+        /* ট্যাব স্টাইল */
+        .tabs {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 25px;
-            background: white;
-            padding: 20px;
-            border-radius: 18px;
-            box-shadow: 0 8px 15px -6px rgba(0,0,0,0.1);
-            border-left: 4px solid #667eea;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 10px 0 25px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
         }
 
-        @media (min-width: 640px) {
-            .timeline-item {
-                flex-direction: row;
-                gap: 20px;
-                padding: 25px;
-            }
-        }
-
-        .timeline-date {
-            background: #667eea15;
-            color: #667eea;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 14px;
+        .tab-btn {
+            padding: 14px 26px;
+            border: none;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            font-size: 16px;
             font-weight: 600;
-            display: inline-block;
-            align-self: flex-start;
-        }
-
-        /* আন্দোলন বিশেষ ট্যাগ */
-        .movement-tag {
-            background: #dc2626;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        /* ইনফো গ্রিড */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        @media (min-width: 480px) {
-            .info-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .info-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .info-card {
-            background: white;
-            padding: 20px 15px;
-            border-radius: 18px;
-            box-shadow: 0 8px 15px -6px rgba(0,0,0,0.1);
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .info-card i {
-            font-size: 28px;
-            color: #667eea;
-            margin-bottom: 12px;
-        }
-
-        .info-card h4 {
-            font-size: 18px;
-            margin-bottom: 8px;
             color: #1e293b;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.5s;
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow: 0 8px 18px -6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .info-card p {
-            color: #64748b;
-            font-size: 14px;
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .tab-btn:hover::after {
+            transform: scaleX(1);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 15px 25px -8px #667eea;
+            transform: scale(1.05);
+        }
+
+        /* ট্যাব কন্টেন্ট */
+        .tab-pane {
+            display: none;
+            animation: slideFade 0.6s ease;
+        }
+
+        .tab-pane.active { display: block; }
+
+        @keyframes slideFade {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* টাইমলাইন */
+        .timeline-item {
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(8px);
+            padding: 22px;
+            border-radius: 30px;
+            margin-bottom: 18px;
+            box-shadow: 0 15px 25px -12px rgba(0,0,0,0.15);
+            border-left: 6px solid #667eea;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(102,126,234,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.8s;
+        }
+
+        .timeline-item:hover::before {
+            transform: translateX(100%);
+        }
+
+        .timeline-item:hover {
+            transform: translateX(8px) scale(1.01);
+            border-left-color: #764ba2;
         }
 
         /* গ্যালারি */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 15px 0;
+            gap: 18px;
         }
 
         @media (min-width: 640px) {
-            .gallery-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 15px;
-            }
+            .gallery-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
         }
 
         .gallery-item {
-            position: relative;
-            border-radius: 15px;
+            border-radius: 30px;
             overflow: hidden;
             aspect-ratio: 1;
-            box-shadow: 0 8px 15px -6px rgba(0,0,0,0.2);
+            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.25);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 1s, filter 0.5s;
+            filter: brightness(1);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotateY(5deg) rotateX(2deg);
+            box-shadow: 0 40px 50px -15px #667eea;
+            z-index: 10;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15);
+            filter: brightness(1.1);
         }
 
         .gallery-overlay {
@@ -611,144 +677,143 @@
             right: 0;
             background: linear-gradient(transparent, rgba(0,0,0,0.8));
             color: white;
-            padding: 12px;
-            font-size: 12px;
+            padding: 15px;
+            font-size: 14px;
             transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        @media (min-width: 768px) {
-            .gallery-overlay {
-                padding: 15px;
-                font-size: 14px;
-            }
+            transition: transform 0.5s;
+            backdrop-filter: blur(3px);
         }
 
         .gallery-item:hover .gallery-overlay {
             transform: translateY(0);
         }
 
-        /* কন্টাক্ট গ্রিড */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        @media (min-width: 480px) {
-            .contact-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
+        /* যোগাযোগ কার্ড */
         .contact-item {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(8px);
+            padding: 18px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 8px 15px -6px rgba(0,0,0,0.1);
+            gap: 16px;
+            box-shadow: 0 12px 22px -10px rgba(0,0,0,0.15);
+            transition: all 0.5s;
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
-        .contact-item i {
-            font-size: 22px;
-            color: #667eea;
-            width: 30px;
+        .contact-item:hover {
+            background: white;
+            transform: scale(1.03) translateY(-4px) rotateX(2deg);
+            box-shadow: 0 25px 35px -12px #667eea;
         }
 
-        .contact-item span {
-            color: #1e293b;
-            font-weight: 500;
-            font-size: 14px;
-            word-break: break-word;
-        }
-
-        /* সোশ্যাল লিংক */
+        /* সোশ্যাল আইকন */
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-            flex-wrap: wrap;
+            gap: 22px;
+            margin: 45px 0 25px;
+            perspective: 500px;
         }
 
         .social-icon {
-            width: 45px;
-            height: 45px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 28px;
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 25px -8px currentColor;
+            transform-style: preserve-3d;
+        }
+
+        .social-icon:hover {
+            transform: rotateY(360deg) rotateX(10deg) scale(1.2);
+            box-shadow: 0 25px 35px -5px currentColor;
         }
 
         .facebook { background: #1877f2; }
-        .instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); }
+        .instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); background-size: 200% auto; }
         .twitter { background: #1DA1F2; }
         .linkedin { background: #0077b5; }
 
         /* ফুটার */
         .footer {
             text-align: center;
-            padding: 25px 0;
-            margin-top: 30px;
-            border-top: 1px solid #e2e8f0;
+            padding: 35px 0 15px;
+            color: #475569;
+            font-size: 14px;
+            animation: fadeUp 1.5s;
+            position: relative;
         }
 
         .footer p {
-            color: #64748b;
-            font-size: 12px;
+            margin: 5px 0;
+            text-shadow: 0 2px 5px rgba(255,255,255,0.5);
+        }
+
+        /* টাইপরাইটার ইফেক্ট */
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+            border-right: 2px solid #667eea;
+            display: inline-block;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #667eea; }
         }
     </style>
 </head>
 <body>
+    <!-- পার্টিকেল ব্যাকগ্রাউন্ড -->
+    <div id="particles-js"></div>
+
+    <!-- কাস্টম কার্সর -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
     <div class="container">
         <!-- হিরো সেকশন -->
-        <div class="glass-card">
+        <div class="glass-card" data-aos="fade-up" data-aos-duration="1000">
             <div class="hero">
                 <div class="profile-wrapper">
-                    <!-- র্যান্ডম প্রোফাইল ইমেজ (Unsplash থেকে) - পরে পরিবর্তন করুন -->
-                    <img src="https://images.unsplash.com/vector-1772491260570-8112216d1196?q=80&w=734&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="M A Halim Rahi" class="profile-img">
+                    <img src="https://images.unsplash.com/vector-1772491260570-8112216d1196?q=80&w=734&auto=format&fit=crop" alt="M A Halim Rahi" class="profile-img">
                     <div class="profile-glow"></div>
-                    <div class="verified-badge">
-                        <i class="fas fa-check"></i>
-                    </div>
+                    <div class="profile-glow-secondary"></div>
+                    <div class="verified-badge"><i class="fas fa-check"></i></div>
                 </div>
                 <div class="hero-content">
-                    <h1>এম এ হালিম রাহি</h1>
+                    <h1 class="typewriter">এম এ হালিম রাহি</h1>
                     <div class="hero-tags">
                         <span class="hero-tag"><i class="fas fa-briefcase"></i> উদ্যোক্তা</span>
                         <span class="hero-tag"><i class="fas fa-gavel"></i> মানবাধিকার কর্মী</span>
                         <span class="hero-tag"><i class="fas fa-users"></i> ছাত্রনেতা</span>
                         <span class="hero-tag"><i class="fas fa-hand-fist"></i> ২৪'র গণঅভ্যুত্থানের সৈনিক</span>
                     </div>
-                    <div class="movement-badge">
+                    <div class="movement-badge animate__animated animate__pulse animate__infinite">
                         <i class="fas fa-flag"></i> ১৮' কোটা আন্দোলন | ২৪' গণঅভ্যুত্থান
                     </div>
-                    <div class="quote">
-                        <i class="fas fa-quote-left" style="color: #667eea; opacity: 0.5;"></i>
-                        "গ্রামের মাটি থেকে উঠে আসা একটি নাম, সংগ্রামই আমার অস্ত্র, সততাই আমার পাথেয়।
-
-আমি বিশ্বাস করি, প্রকৃত সাফল্য কেবল নিজের জন্য বেঁচে থাকার নাম নয়; নিজের সম্প্রদায়, নিজের দেশ ও মানুষের জন্য কিছু করে যাওয়ার নামই জীবন।
-
-ছাত্র অধিকার পরিষদে কাজ করতে গিয়ে শিখেছি, অন্যায়ের প্রতিবাদ করতে গেলে একলা পথ চলতে হয়, কিন্তু সেই পথই ইতিহাস তৈরি করে।
-
-আমার জয় নয়, জয় হোক সত্যের। আমার পরিচয় নয়, পরিচয় হোক আমার কর্মের।
-
-যতদিন বেঁচে আছি, মানবতার সেবায়, দেশের সেবায় নিজেকে নিয়োজিত রাখব—এটাই আমার অঙ্গীকার।"
-                        <i class="fas fa-quote-right" style="color: #667eea; opacity: 0.5; float: right;"></i>
+                    <div class="quote" data-aos="zoom-in" data-aos-delay="200">
+                        <i class="fas fa-quote-left" style="color: #667eea; font-size: 20px;"></i>
+                        "গ্রামের মাটি থেকে উঠে আসা একটি নাম, সংগ্রামই আমার অস্ত্র, সততাই আমার পাথেয়। ... মানবতার সেবায়, দেশের সেবায় নিজেকে নিয়োজিত রাখব—এটাই আমার অঙ্গীকার।"
+                        <i class="fas fa-quote-right" style="color: #667eea; float: right; font-size: 20px;"></i>
                     </div>
                     <div class="button-group">
-                        <a href="https://facebook.com/mahrahi13" target="_blank" class="btn btn-primary">
-                            <i class="fab fa-facebook-f"></i> ফেসবুকে ফলো করুন
-                        </a>
-                        <a href="#contact" class="btn btn-outline">
-                            <i class="fas fa-envelope"></i> যোগাযোগ
-                        </a>
+                        <a href="https://facebook.com/mahrahi13" target="_blank" class="btn btn-primary animate__animated animate__heartBeat animate__delay-1s"><i class="fab fa-facebook-f"></i> ফেসবুকে ফলো করুন</a>
+                        <a href="#contact" class="btn btn-outline"><i class="fas fa-envelope"></i> যোগাযোগ</a>
                     </div>
                 </div>
             </div>
@@ -756,41 +821,23 @@
 
         <!-- স্ট্যাটস গ্রিড -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
-                <div class="stat-number">২০০৫</div>
-                <div class="stat-label">জন্ম</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
-                <div class="stat-number">জকিগঞ্জ</div>
-                <div class="stat-label">মাতৃভূমি</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-briefcase"></i></div>
-                <div class="stat-number">৩+</div>
-                <div class="stat-label">প্রতিষ্ঠান</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-flag"></i></div>
-                <div class="stat-number">২টি</div>
-                <div class="stat-label">গণআন্দোলন</div>
-            </div>
+            <div class="stat-card" data-aos="flip-left" data-aos-delay="100"><div class="stat-icon"><i class="fas fa-calendar-alt"></i></div><div class="stat-number">২০০৫</div><div class="stat-label">জন্ম</div></div>
+            <div class="stat-card" data-aos="flip-left" data-aos-delay="200"><div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div><div class="stat-number">জকিগঞ্জ</div><div class="stat-label">মাতৃভূমি</div></div>
+            <div class="stat-card" data-aos="flip-left" data-aos-delay="300"><div class="stat-icon"><i class="fas fa-briefcase"></i></div><div class="stat-number">৩+</div><div class="stat-label">প্রতিষ্ঠান</div></div>
+            <div class="stat-card" data-aos="flip-left" data-aos-delay="400"><div class="stat-icon"><i class="fas fa-flag"></i></div><div class="stat-number">২টি</div><div class="stat-label">গণআন্দোলন</div></div>
         </div>
 
-        <!-- মিনিস্টার সেকশন - হাইলাইটেড -->
-        <div class="minister-card">
+        <!-- মিনিস্টার সেকশন -->
+        <div class="minister-card" data-aos="fade-right" data-aos-duration="1200">
             <h3><i class="fas fa-crown" style="color: #fbbf24;"></i> মাননীয় প্রতিমন্ত্রী নূরুল হক নূর</h3>
-            <p>বাংলাদেশ সরকারের প্রবাসী কল্যাণ ও বৈদেশিক কর্মসংস্থান প্রতিমন্ত্রী</p>
-            <p><i class="fas fa-users" style="color: #fbbf24;"></i> বাংলাদেশ গণ অধিকার পরিষদের সভাপতি ও আমাদের দলের নেতা</p>
-            <p style="font-style: italic;">"জনাব নূরুল হক নূর ভাইয়ের নেতৃত্বে আমরা ছাত্র অধিকার পরিষদ কাজ করে যাচ্ছি। ১৮'র কোটা আন্দোলন থেকে ২৪'র গণঅভ্যুত্থান পর্যন্ত তাঁর নির্দেশনায় আমরা মাঠে ছিলাম।"</p>
-            <div class="minister-badge">
-                <i class="fas fa-check-circle"></i> প্রবাসী কল্যাণ ও বৈদেশিক কর্মসংস্থান মন্ত্রণালয়
-            </div>
+            <p>প্রবাসী কল্যাণ ও বৈদেশিক কর্মসংস্থান প্রতিমন্ত্রী, বাংলাদেশ সরকার</p>
+            <p><i class="fas fa-users" style="color: #fbbf24;"></i> সভাপতি, বাংলাদেশ গণ অধিকার পরিষদ</p>
+            <p style="font-style: italic;">"তাঁর নেতৃত্বে আমরা ১৮'র কোটা আন্দোলন থেকে ২৪'র গণঅভ্যুত্থান পর্যন্ত মাঠে ছিলাম।"</p>
+            <div class="minister-badge"><i class="fas fa-check-circle"></i> প্রবাসী কল্যাণ ও বৈদেশিক কর্মসংস্থান মন্ত্রণালয়</div>
         </div>
 
-        <!-- ট্যাব নেভিগেশন - মোবাইল স্ক্রলেবল -->
-        <div class="tabs">
+        <!-- ট্যাব নেভিগেশন -->
+        <div class="tabs" data-aos="fade-up">
             <button class="tab-btn active" onclick="showTab('about')">পরিচিতি</button>
             <button class="tab-btn" onclick="showTab('movement')">আন্দোলন</button>
             <button class="tab-btn" onclick="showTab('business')">ব্যবসা</button>
@@ -799,215 +846,182 @@
             <button class="tab-btn" onclick="showTab('gallery')">গ্যালারি</button>
         </div>
 
-        <!-- ট্যাব কন্টেন্ট - পরিচিতি -->
+        <!-- ট্যাব কন্টেন্ট -->
         <div id="about" class="tab-pane active">
-            <div class="glass-card">
-                <h2 style="color: #1e293b; margin-bottom: 20px; font-size: 24px;"><i class="fas fa-user-circle" style="color: #667eea;"></i> জীবন ও পরিচিতি</h2>
-                <p style="margin-bottom: 15px;">এম এ হালিম রাহি সিলেটের জকিগঞ্জ উপজেলার গোটেরগ্রামে ২০০৫ সালে জন্মগ্রহণ করেন। পিতা মো. মহিবুর রহমান ও মাতা সালমা বেগম। শৈশব থেকেই তিনি লেখাপড়ার পাশাপাশি সামাজিক ও রাজনৈতিক কর্মকাণ্ডের সাথে যুক্ত হন।</p>
-                <p>জকিগঞ্জের সীমান্তঘেঁষা গ্রাম থেকে উঠে এসে তিনি আজ সিলেটের শাহজালাল উপশহরে নিজের ব্যবসায়িক প্রতিষ্ঠান গড়ে তুলেছেন। একই সাথে ছাত্র অধিকার পরিষদের মাধ্যমে আন্দোলন-সংগ্রামে অংশ নিচ্ছেন।</p>
-                
-                <h3 style="margin: 25px 0 15px; color: #1e293b;"><i class="fas fa-graduation-cap" style="color: #667eea;"></i> শিক্ষাজীবন</h3>
-                <div class="timeline-item">
-                    <span class="timeline-date">চলমান</span>
-                    <div>
-                        <strong>ইছামতি ডিগ্রি কলেজ</strong>
-                        <p>উচ্চ মাধ্যমিক</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <span class="timeline-date">সম্পূর্ণ</span>
-                    <div>
-                        <strong>গোলাম মোস্তফা চৌধুরী একাডেমী</strong>
-                        <p>মাধ্যমিক শিক্ষা</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <span class="timeline-date">সম্পূর্ণ</span>
-                    <div>
-                        <strong>চাইল্ড হোম একাডেমী</strong>
-                        <p>প্রাথমিক শিক্ষা</p>
-                    </div>
-                </div>
+            <div class="glass-card" data-aos="fade-up">
+                <h2><i class="fas fa-user-circle" style="color: #667eea;"></i> জীবন ও পরিচিতি</h2>
+                <p>এম এ হালিম রাহি সিলেটের জকিগঞ্জে ২০০৫ সালে জন্মগ্রহণ করেন। শৈশব থেকেই সামাজিক ও রাজনৈতিক কর্মকাণ্ডের সাথে যুক্ত।</p>
+                <h3>শিক্ষাজীবন</h3>
+                <div class="timeline-item"><span class="timeline-date">চলমান</span><strong>ইছামতি ডিগ্রি কলেজ</strong><p>উচ্চ মাধ্যমিক</p></div>
+                <div class="timeline-item"><span class="timeline-date">সম্পূর্ণ</span><strong>গোলাম মোস্তফা চৌধুরী একাডেমী</strong><p>মাধ্যমিক</p></div>
             </div>
         </div>
 
-        <!-- ট্যাব কন্টেন্ট - আন্দোলন -->
         <div id="movement" class="tab-pane">
-            <div class="glass-card">
-                <h2 style="color: #1e293b; margin-bottom: 20px; font-size: 24px;"><i class="fas fa-flag" style="color: #dc2626;"></i> আন্দোলন-সংগ্রামের ইতিহাস</h2>
-                
-                <div style="background: #dc262610; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                    <h3 style="color: #dc2626;">২০১৮ কোটাবিরোধী আন্দোলন</h3>
-                    <p>১৮'র কোটাবিরোধী আন্দোলনে সক্রিয় অংশগ্রহণ। ছাত্র অধিকার পরিষদের ব্যানারে আন্দোলন সংগঠিত করা, মিছিল-মিটিংয়ে নেতৃত্ব দান এবং শিক্ষার্থীদের অধিকার আদায়ের আন্দোলনে মাঠে থাকা।</p>
+            <div class="glass-card" data-aos="fade-up">
+                <h2><i class="fas fa-flag" style="color: #dc2626;"></i> আন্দোলন-সংগ্রাম</h2>
+                <div style="background:rgba(239,68,68,0.15);padding:20px;border-radius:25px;margin-bottom:15px;" data-aos="fade-right">
+                    <h3 style="color:#b91c1c;">২০১৮ কোটাবিরোধী আন্দোলন</h3>
+                    <p>সক্রিয় অংশগ্রহণ, মিছিল-মিটিংয়ে নেতৃত্ব।</p>
                 </div>
-
-                <div style="background: #dc262620; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                    <h3 style="color: #b91c1c;">২০২৪ গণঅভ্যুত্থান</h3>
-                    <p>২৪'র বৈষম্যবিরোধী ছাত্র আন্দোলন ও গণঅভ্যুত্থানে ছাত্র অধিকার পরিষদের সাথে থেকে সক্রিয় ভূমিকা পালন। আন্দোলনের প্রতিটি পর্যায়ে মাঠে থেকে নেতৃত্ব দান।</p>
-                    <p><span class="movement-tag">গণঅভ্যুত্থান-২৪</span></p>
-                </div>
-
-                <div style="background: white; padding: 20px; border-radius: 15px;">
-                    <h4 style="color: #1e293b;">আন্দোলনে সহযোদ্ধা</h4>
-                    <p>নূরুল হক নুর স্যার ও হাসান আল মামুন ভাইয়ের নেতৃত্বে ছাত্র অধিকার পরিষদের হয়ে কাজ করার সুযোগ। প্রতিটি গণতান্ত্রিক আন্দোলনে অংশগ্রহণ ও নেতৃত্ব দান।</p>
+                <div style="background:rgba(185,28,28,0.15);padding:20px;border-radius:25px;" data-aos="fade-left">
+                    <h3 style="color:#b91c1c;">২০২৪ গণঅভ্যুত্থান</h3>
+                    <p>বৈষম্যবিরোধী আন্দোলনে ছাত্র অধিকার পরিষদের সাথে সক্রিয় ভূমিকা।</p>
                 </div>
             </div>
         </div>
 
-        <!-- ট্যাব কন্টেন্ট - ব্যবসা (সংক্ষিপ্ত) -->
         <div id="business" class="tab-pane">
-            <div class="glass-card">
-                <h2 style="margin-bottom: 20px;"><i class="fas fa-briefcase" style="color: #667eea;"></i> ব্যবসায়িক উদ্যোগ</h2>
-                
+            <div class="glass-card" data-aos="fade-up">
+                <h2><i class="fas fa-briefcase" style="color: #667eea;"></i> ব্যবসায়িক উদ্যোগ</h2>
                 <div class="info-grid">
-                    <div class="info-card">
-                        <i class="fas fa-plane"></i>
-                        <h4>সাকসেস ইনকর্পোরেটেড</h4>
-                        <p>সিইও ও মালিক | ট্রাভেল এজেন্সি</p>
-                        <p><small>শাহজালাল উপশহর ও কদমতলী</small></p>
-                    </div>
-                    <div class="info-card">
-                        <i class="fas fa-utensils"></i>
-                        <h4>চিকেন হাট</h4>
-                        <p>সহ-মালিক | রেস্তোরা</p>
-                        <p><small>ট্রেড লাইসেন্স: 1304132024</small></p>
-                    </div>
-                    <div class="info-card">
-                        <i class="fas fa-globe"></i>
-                        <h4>আন্তর্জাতিক পার্টনার</h4>
-                        <p>ফার্স্ট ট্রিপ, বাই এয়ার টিকিট, মাল্টিরাইজেন</p>
-                    </div>
+                    <div class="info-card" data-aos="zoom-in"><i class="fas fa-plane"></i><h4>সাকসেস ইনকর্পোরেটেড</h4><p>সিইও (ট্রাভেল এজেন্সি)</p></div>
+                    <div class="info-card" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-utensils"></i><h4>চিকেন হাট</h4><p>সহ-মালিক</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- ট্যাব কন্টেন্ট - সামাজিক -->
         <div id="social" class="tab-pane">
-            <div class="glass-card">
-                <h2 style="margin-bottom: 20px;"><i class="fas fa-gavel" style="color: #667eea;"></i> সামাজিক কর্ম</h2>
-                
-                <div style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
-                    <h3 style="color: #667eea;">বাংলাদেশ মানবাধিকার বাস্তবায়ন ফাউন্ডেশন</h3>
-                    <p><strong>দপ্তর সম্পাদক, জকিগঞ্জ উপজেলা শাখা</strong></p>
-                    <p>মেয়াদ: জানুয়ারি ২০২৫ - জানুয়ারি ২০২৭</p>
-                    <p>জকিগঞ্জ উপজেলায় মানবাধিকার সুরক্ষা, আইনি সহায়তা ও সামাজিক ন্যায়বিচার প্রতিষ্ঠায় কাজ করছেন।</p>
+            <div class="glass-card" data-aos="fade-up">
+                <h2><i class="fas fa-gavel" style="color: #667eea;"></i> সামাজিক কর্ম</h2>
+                <div style="background:rgba(255,255,255,0.5);padding:20px;border-radius:25px;" data-aos="flip-up">
+                    <h3>বাংলাদেশ মানবাধিকার বাস্তবায়ন ফাউন্ডেশন</h3>
+                    <p><strong>দপ্তর সম্পাদক, জকিগঞ্জ উপজেলা</strong> (২০২৫-২০২৭)</p>
                 </div>
             </div>
         </div>
 
-        <!-- ট্যাব কন্টেন্ট - রাজনীতি -->
         <div id="political" class="tab-pane">
-            <div class="glass-card">
-                <h2 style="margin-bottom: 20px;"><i class="fas fa-hand-fist" style="color: #667eea;"></i> রাজনৈতিক পরিচিতি</h2>
-                
-                <div style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
-                    <h3 style="color: #667eea;">বাংলাদেশ ছাত্র অধিকার পরিষদ</h3>
-                    <p><strong>বাংলাদেশ গণ অধিকার পরিষদের অঙ্গ সংগঠন</strong></p>
-                    <p>ছাত্র অধিকার পরিষদের সাথে যুক্ত থেকে শিক্ষার্থীদের অধিকার, সুবিচার ও গণতান্ত্রিক মূল্যবোধ প্রতিষ্ঠায় কাজ করছি।</p>
-                </div>
-
-                <div style="background: #f8fafc; padding: 20px; border-radius: 15px;">
-                    <h4>আমাদের নেতৃত্ব</h4>
-                    <p><i class="fas fa-user-tie" style="color: #667eea;"></i> <strong>জনাব নূরুল হক নূর</strong> - সভাপতি, বাংলাদেশ গণ অধিকার পরিষদ ও মাননীয় প্রতিমন্ত্রী</p>
-                    <p><i class="fas fa-user" style="color: #667eea;"></i> <strong>হাসান আল মামুন</strong> - প্রতিষ্ঠাকালীন আহ্বায়ক ও ভারপ্রাপ্ত সাধারণ সম্পাদক, বাংলাদেশ ছাত্র অধিকার পরিষদ</p>
+            <div class="glass-card" data-aos="fade-up">
+                <h2><i class="fas fa-hand-fist" style="color: #667eea;"></i> রাজনৈতিক পরিচিতি</h2>
+                <div style="background:rgba(255,255,255,0.5);padding:20px;border-radius:25px;" data-aos="flip-down">
+                    <h3>বাংলাদেশ ছাত্র অধিকার পরিষদ</h3>
+                    <p>অঙ্গ সংগঠন, বাংলাদেশ গণ অধিকার পরিষদ। নূরুল হক নূর ও হাসান আল মামুনের নেতৃত্বে কাজ করছি।</p>
                 </div>
             </div>
         </div>
 
-        <!-- ট্যাব কন্টেন্ট - গ্যালারি -->
         <div id="gallery" class="tab-pane">
-            <div class="glass-card">
-                <h2 style="margin-bottom: 20px;"><i class="fas fa-images" style="color: #667eea;"></i> মুহূর্তের স্মৃতি</h2>
+            <div class="glass-card" data-aos="fade-up">
+                <h2><i class="fas fa-images" style="color: #667eea;"></i> গ্যালারি</h2>
                 <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="https://scontent.fdac142-1.fna.fbcdn.net/v/t39.30808-6/491759794_2349590068774961_4741090519797113513_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=100&ccb=1-7&_nc_sid=b895b5&_nc_eui2=AeESlGNdijPmouABUv3Nrp-vEQ--hlpzr4cRD76GWnOvh-uR4HbBmLJFsJuzP5ifNHHR_zslkzIJk6-47wFNPkyg&_nc_ohc=UXPc6GduYWAQ7kNvwHhzmry&_nc_oc=Adkc_nbrTQRW2LH52IXP8pgiCBOXJRCA3j4GfjhgXopDo3-amFO2Kn-trgOAPdjQ52A&_nc_zt=23&_nc_ht=scontent.fdac142-1.fna&_nc_gid=1vlqvvypAG9OBorP8_3ukA&_nc_ss=8&oh=00_Afy4PufGs5xBLqvHF0HGm0162NanPo2yxjoyZyQm1w_tlw&oe=69ABCD75" alt="Team">
-                        <div class="gallery-overlay">গণ অধিকার পরিষদ এর সভাপতি ও সাধারাণ সম্পাদক</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=400&h=400&fit=crop" alt="Rally">
-                        <div class="gallery-overlay">মানবাধিকার সভা</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=400&fit=crop" alt="Protest">
-                        <div class="gallery-overlay">ছাত্র আন্দোলন</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop" alt="Business">
-                        <div class="gallery-overlay">চিকেন হাট উদ্বোধন</div>
-                    </div>
+                    <div class="gallery-item" data-aos="flip-left"><img src="https://scontent.fdac142-1.fna.fbcdn.net/v/t39.30808-6/491759794_2349590068774961_4741090519797113513_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=100&ccb=1-7&_nc_sid=b895b5&_nc_eui2=AeESlGNdijPmouABUv3Nrp-vEQ--hlpzr4cRD76GWnOvh-uR4HbBmLJFsJuzP5ifNHHR_zslkzIJk6-47wFNPkyg&_nc_ohc=UXPc6GduYWAQ7kNvwHhzmry&_nc_oc=Adkc_nbrTQRW2LH52IXP8pgiCBOXJRCA3j4GfjhgXopDo3-amFO2Kn-trgOAPdjQ52A&_nc_zt=23&_nc_ht=scontent.fdac142-1.fna&_nc_gid=1vlqvvypAG9OBorP8_3ukA&_nc_ss=8&oh=00_Afy4PufGs5xBLqvHF0HGm0162NanPo2yxjoyZyQm1w_tlw&oe=69ABCD75" alt="Team"><div class="gallery-overlay">গণ অধিকার পরিষদ</div></div>
+                    <div class="gallery-item" data-aos="flip-left" data-aos-delay="100"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=400&h=400&fit=crop" alt="Rally"><div class="gallery-overlay">মানবাধিকার সভা</div></div>
+                    <div class="gallery-item" data-aos="flip-left" data-aos-delay="200"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=400&fit=crop" alt="Protest"><div class="gallery-overlay">ছাত্র আন্দোলন</div></div>
+                    <div class="gallery-item" data-aos="flip-left" data-aos-delay="300"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop" alt="Business"><div class="gallery-overlay">চিকেন হাট</div></div>
                 </div>
-                <p style="text-align: center; color: #64748b; font-size: 12px; margin-top: 15px;">※ </p>
             </div>
         </div>
 
-        <!-- যোগাযোগ সেকশন -->
-        <div id="contact" class="glass-card">
-            <h2 style="margin-bottom: 20px;"><i class="fas fa-address-card" style="color: #667eea;"></i> যোগাযোগ</h2>
-            
+        <!-- যোগাযোগ -->
+        <div id="contact" class="glass-card" data-aos="fade-up" data-aos-duration="1200">
+            <h2><i class="fas fa-address-card" style="color: #667eea;"></i> যোগাযোগ</h2>
             <div class="contact-grid">
-                <div class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <span>+8809643776654</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>+8801799072987</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>halimrahi641@gmail.com</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fab fa-facebook"></i>
-                    <span>fb.com/mahrahi13</span>
-                </div>
+                <div class="contact-item" data-aos="fade-right"><i class="fas fa-phone"></i><span>+8809643776654</span></div>
+                <div class="contact-item" data-aos="fade-right" data-aos-delay="100"><i class="fas fa-phone-alt"></i><span>+8801799072987</span></div>
+                <div class="contact-item" data-aos="fade-right" data-aos-delay="200"><i class="fas fa-envelope"></i><span>halimrahi641@gmail.com</span></div>
+                <div class="contact-item" data-aos="fade-right" data-aos-delay="300"><i class="fab fa-facebook"></i><span>fb.com/mahrahi13</span></div>
             </div>
-
-            <div style="background: #f1f5f9; padding: 15px; border-radius: 15px; margin-top: 15px;">
-                <p><i class="fas fa-map-marker-alt" style="color: #667eea;"></i> <strong>প্রধান কার্যালয়:</strong> এন.কে. টাওয়ার, শাহজালাল উপশহর, সিলেট</p>
-                <p><i class="fas fa-map-marker-alt" style="color: #667eea;"></i> <strong>শাখা:</strong> কুইন্স টাওয়ার, কদমতলী, সিলেট</p>
-                <p><i class="fas fa-home" style="color: #667eea;"></i> <strong>স্থায়ী ঠিকানা:</strong> গোটারগ্রাম, জকিগঞ্জ, সিলেট</p>
+            <div style="margin-top:25px; background:rgba(255,255,255,0.3); padding:18px; border-radius:25px;" data-aos="zoom-in">
+                <p><i class="fas fa-map-marker-alt" style="color:#667eea;"></i> এন.কে. টাওয়ার, শাহজালাল উপশহর, সিলেট</p>
             </div>
         </div>
 
         <!-- সোশ্যাল লিংক -->
         <div class="social-links">
-            <a href="https://facebook.com/mahrahi13" target="_blank" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.instagram.com/mahrahi13" target="_blank" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://x.com/mahrahi13" target="_blank" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://facebook.com/mahrahi13" target="_blank" class="social-icon facebook animate__animated animate__bounceIn" data-aos="zoom-in"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/mahrahi13" target="_blank" class="social-icon instagram animate__animated animate__bounceIn" data-aos="zoom-in" data-aos-delay="100"><i class="fab fa-instagram"></i></a>
+            <a href="https://x.com/mahrahi13" target="_blank" class="social-icon twitter animate__animated animate__bounceIn" data-aos="zoom-in" data-aos-delay="200"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon linkedin animate__animated animate__bounceIn" data-aos="zoom-in" data-aos-delay="300"><i class="fab fa-linkedin-in"></i></a>
         </div>
 
         <!-- ফুটার -->
-        <div class="footer">
+        <div class="footer" data-aos="fade-up">
             <p>© ২০২৪ এম এ হালিম রাহি | উদ্যোক্তা, মানবাধিকার কর্মী ও ছাত্রনেতা</p>
-            <p style="margin-top: 8px;">১৮'র কোটাবিরোধী আন্দোলন ও ২৪'র গণঅভ্যুত্থানের সক্রিয় সৈনিক</p>
-            <p style="margin-top: 15px; font-size: 10px; color: #94a3b8;">বাংলাদেশ ছাত্র অধিকার পরিষদ কর্তৃক বাংলাদেশ গণ অধিকার পরিষদের অঙ্গ সংগঠন</p>
+            <p>১৮'র কোটাবিরোধী আন্দোলন ও ২৪'র গণঅভ্যুত্থানের সক্রিয় সৈনিক</p>
         </div>
     </div>
 
-    <!-- জাভাস্ক্রিপ্ট -->
+    <!-- স্ক্রিপ্ট -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // AOS initialization
+        AOS.init({
+            duration: 800,
+            once: false,
+            mirror: true,
+            offset: 50
+        });
+
+        // Particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 60, density: { enable: true, value_area: 800 } },
+                color: { value: '#667eea' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: '#667eea', opacity: 0.3, width: 1 },
+                move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } }
+            },
+            retina_detect: true
+        });
+
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            follower.style.left = e.clientX + 'px';
+            follower.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = 1;
+            follower.style.opacity = 1;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = 0;
+            follower.style.opacity = 0;
+        });
+
+        // Tab functionality
         function showTab(tabId) {
-            // সব ট্যাব পেন হাইড করো
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.remove('active');
-            });
-            
-            // সব বাটন থেকে active ক্লাস রিমুভ করো
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // সিলেক্টেড ট্যাব দেখাও
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            
-            // যে বাটনে ক্লিক করেছে সেটা active করো (ইভেন্ট টার্গেট)
             event.target.classList.add('active');
+            
+            // Trigger AOS refresh for new content
+            setTimeout(() => AOS.refresh(), 100);
         }
 
-        // মোবাইল টাচ অপ্টিমাইজেশন
-        document.addEventListener('touchstart', function(){}, {passive: true});
+        // 3D tilt effect on glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
     </script>
 </body>
 </html>
