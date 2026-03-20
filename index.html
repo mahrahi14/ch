@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>এম এ হালিম রাহি | ২৪'র গণঅভ্যুত্থানের সৈনিক</title>
+    <title>এম এ হালিম রাহি | উদ্দ্যোক্তা </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -24,7 +24,7 @@
         html{scroll-behavior:smooth}
         body{font-family:'Hind Siliguri','Inter',sans-serif;background:var(--bg);color:var(--t);line-height:1.7;overflow-x:hidden}
         ::selection{background:var(--p);color:#fff}
-        ::-webkit-scrollbar{width:5px}
+        ::-webkit-scrollbar{width:6px}
         ::-webkit-scrollbar-track{background:transparent}
         ::-webkit-scrollbar-thumb{background:linear-gradient(var(--p),var(--s));border-radius:10px}
 
@@ -80,9 +80,9 @@
         .b-top.vis{opacity:1;transform:scale(1)}
         .b-top:hover{transform:scale(1.15) translateY(-3px)}
 
-        /* ===== GLASS CARD ===== */
-        .g-card{background:var(--glass);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.04);border-radius:var(--radius);padding:42px 34px;box-shadow:0 40px 80px -20px rgba(0,0,0,.4);margin-bottom:30px;position:relative;overflow:hidden;opacity:0;transform:translateY(60px)}
-        .g-card::before{content:'';position:absolute;inset:-1px;border-radius:calc(var(--radius) + 1px);padding:1px;background:conic-gradient(from 180deg,transparent 60%,rgba(124,58,237,.2),rgba(236,72,153,.2),transparent 95%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .6s}
+        /* ===== GLASS CARD UPGRADED ===== */
+        .g-card{background:linear-gradient(135deg, rgba(15, 20, 40, 0.7), rgba(10, 15, 30, 0.4));backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:42px 34px;box-shadow:0 40px 80px -20px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.05);margin-bottom:30px;position:relative;overflow:hidden;opacity:0;transform:translateY(60px)}
+        .g-card::before{content:'';position:absolute;inset:-1px;border-radius:calc(var(--radius) + 1px);padding:1px;background:conic-gradient(from 180deg,transparent 60%,rgba(124,58,237,.3),rgba(236,72,153,.3),transparent 95%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .6s}
         .g-card:hover::before{opacity:1}
         .g-card .c-glow{position:absolute;width:350px;height:350px;border-radius:50%;filter:blur(80px);opacity:0;transition:opacity .5s;pointer-events:none;background:radial-gradient(circle,rgba(124,58,237,.12),transparent)}
 
@@ -92,15 +92,35 @@
         .s-head h2{font-size:clamp(20px,4vw,26px);font-weight:700;white-space:nowrap;background:linear-gradient(135deg,#fff,var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .s-icon{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0;box-shadow:0 8px 25px -5px rgba(124,58,237,.4)}
 
-        /* ===== HERO ===== */
+        /* ===== HERO UPGRADED ===== */
         .hero{display:flex;flex-direction:column;align-items:center;gap:45px;padding:30px 0}
         @media(min-width:992px){.hero{flex-direction:row;gap:65px}}
 
         /* Profile */
-        .prof-wrap{position:relative;width:260px;height:260px;flex-shrink:0}
-        @media(min-width:768px){.prof-wrap{width:300px;height:300px}}
-        .prof-img{width:100%;height:100%;border-radius:50%;object-fit:cover;position:relative;z-index:3;border:3px solid rgba(255,255,255,.08);transition:all .6s cubic-bezier(.23,1,.32,1)}
-        .prof-wrap:hover .prof-img{transform:scale(1.06);box-shadow:0 30px 60px rgba(124,58,237,.25);border-color:rgba(124,58,237,.3)}
+        .prof-wrap{position:relative;width:280px;height:280px;flex-shrink:0}
+        @media(min-width:768px){.prof-wrap{width:320px;height:320px}}
+        
+        /* 3D Floating Image Frame */
+        .prof-3d-frame {
+            width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: frameFloat 6s ease-in-out infinite;
+        }
+        @keyframes frameFloat { 0%, 100% { transform: translateY(0) rotateY(0deg); } 50% { transform: translateY(-15px) rotateY(5deg); } }
+        
+        .prof-img-main {
+            width: 100%; height: 100%; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; 
+            object-fit: cover; position: relative; z-index: 3; border: 3px solid rgba(255,255,255,.1); 
+            box-shadow: 0 30px 60px rgba(0,0,0,.5); transition: all .6s;
+            animation: morphShape 8s ease-in-out infinite;
+        }
+        @keyframes morphShape {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+            75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+            100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+        }
+        
+        .prof-wrap:hover .prof-img-main { box-shadow: 0 40px 80px rgba(124,58,237,.3); border-color: rgba(124,58,237,.5); }
 
         .prof-glow{position:absolute;inset:5%;border-radius:50%;z-index:1;background:conic-gradient(from 0deg,var(--p),var(--s),var(--a),var(--c),var(--p));filter:blur(45px);opacity:.35;animation:glowSpin 10s linear infinite}
         @keyframes glowSpin{to{transform:rotate(360deg)}}
@@ -114,7 +134,7 @@
         .orbit-3::after{content:'';position:absolute;top:25%;left:-4px;width:5px;height:5px;border-radius:50%;background:var(--a);box-shadow:0 0 12px var(--a)}
         @keyframes orbR{to{transform:rotate(360deg)}}
 
-        .status{position:absolute;bottom:16px;right:16px;z-index:5;width:20px;height:20px;border-radius:50%;background:var(--g);border:3px solid var(--bg)}
+        .status{position:absolute;bottom:16px;right:16px;z-index:5;width:22px;height:22px;border-radius:50%;background:var(--g);border:3px solid var(--bg);box-shadow:0 0 0 4px rgba(34,197,94,.2)}
         .status::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--g);animation:stPulse 2s infinite}
         @keyframes stPulse{0%{transform:scale(1);opacity:1}100%{transform:scale(2.2);opacity:0}}
 
@@ -333,10 +353,51 @@
         @keyframes lbIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
         .lb-x{position:absolute;top:18px;right:18px;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
         .lb-x:hover{background:rgba(255,255,255,.12);transform:rotate(90deg)}
+        
+        /* ===== EID POPUP ===== */
+        .eid-popup-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            z-index: 9999999; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s;
+        }
+        .eid-popup-overlay.act { opacity: 1; pointer-events: all; }
+        
+        .eid-card {
+            position: relative; width: 340px; background: linear-gradient(145deg, #0f3a26, #082618);
+            border-radius: 24px; padding: 40px 25px; text-align: center;
+            border: 2px solid rgba(253, 216, 53, 0.3);
+            box-shadow: 0 0 50px rgba(253, 216, 53, 0.15), inset 0 0 30px rgba(0,0,0,0.3);
+            transform: scale(0.8) translateY(50px); opacity: 0; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .eid-popup-overlay.act .eid-card { transform: scale(1) translateY(0); opacity: 1; }
+        
+        .eid-moon {
+            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+            font-size: 50px; color: #fdd835; filter: drop-shadow(0 0 15px rgba(253, 216, 53, 0.6));
+        }
+        
+        .eid-img-frame {
+            width: 110px; height: 110px; margin: 0 auto 20px;
+            border-radius: 50%; border: 3px solid #fdd835; padding: 4px;
+            background: radial-gradient(circle, #1a5c3a, #000);
+            box-shadow: 0 0 25px rgba(253, 216, 53, 0.3);
+        }
+        .eid-img-frame img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        
+        .eid-title { font-family: 'Playfair Display', serif; font-size: 32px; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .eid-subtitle { font-size: 14px; color: #fdd835; margin-bottom: 15px; }
+        .eid-msg { font-size: 13px; color: #b2dfdb; line-height: 1.8; margin-bottom: 25px; }
+        
+        .eid-btn {
+            padding: 10px 25px; background: linear-gradient(135deg, #fdd835, #f59e0b); color: #004d40;
+            border: none; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 13px;
+            transition: transform 0.3s, box-shadow 0.3s; font-family: inherit;
+        }
+        .eid-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(253, 216, 53, 0.4); }
 
         @media(max-width:480px){
             .g-card{padding:22px 16px;border-radius:20px}
-            .prof-wrap{width:190px;height:190px}
+            .prof-wrap{width:220px;height:220px}
             .f-nav{bottom:12px;padding:5px 8px;gap:3px}
             .f-nav a{width:36px;height:36px;font-size:12px}
         }
@@ -344,9 +405,25 @@
 </head>
 <body>
 
+<!-- EID POPUP -->
+<div class="eid-popup-overlay" id="eidOverlay">
+    <div class="eid-card">
+        <div class="eid-moon">🌙</div>
+        <div class="eid-img-frame">
+            <img src="https://z-cdn-media.chatglm.cn/files/65453e37-7c02-41b1-b088-31587442bca5.jpeg?auth_key=1873968149-b5da70ac39304b4c9f4a893f050a792a-0-7d465fa26098e26f9d75821ff4ed4cb2" alt="M A Halim Rahi">
+        </div>
+        <h2 class="eid-title">ঈদ মোবারক</h2>
+        <div class="eid-subtitle">এম এ হালিম রাহি'র পক্ষ থেকে</div>
+        <p class="eid-msg">
+            বাংলাদেশ ছাত্র অধিকার পরিষদ, সিলেট মহানগর এর পক্ষ থেকে আপনাকে এবং আপনার পরিবারের সকল সদস্যকে ঈদের শুভেচ্ছা। ঈদ আনে আনন্দ, আনে ভালোবাসার বন্ধন।
+        </p>
+        <button class="eid-btn" onclick="closeEidPopup()">ধন্যবাদ</button>
+    </div>
+</div>
+
 <!-- Preloader -->
 <div class="preloader" id="preloader">
-    <div class="pre-logo">হালিম রাহি</div>
+    <div class="pre-logo">এম এ হালিম রাহি</div>
     <div class="pre-bar-wrap"><div class="pre-bar" id="preBar"></div></div>
     <div class="pre-text" id="prePct">0%</div>
 </div>
@@ -390,12 +467,14 @@
     <div class="c-glow" id="hGlow"></div>
     <div class="hero">
         <div class="prof-wrap">
-            <div class="prof-glow"></div>
-            <div class="orbit orbit-1"></div>
-            <div class="orbit orbit-2"></div>
-            <div class="orbit orbit-3"></div>
-            <img src="https://images.unsplash.com/vector-1772491260570-8112216d1196?q=80&w=734&auto=format&fit=crop" alt="M A Halim Rahi" class="prof-img">
-            <div class="status"></div>
+            <div class="prof-3d-frame">
+                <div class="prof-glow"></div>
+                <div class="orbit orbit-1"></div>
+                <div class="orbit orbit-2"></div>
+                <div class="orbit orbit-3"></div>
+                <img src="https://z-cdn-media.chatglm.cn/files/65453e37-7c02-41b1-b088-31587442bca5.jpeg?auth_key=1873968149-b5da70ac39304b4c9f4a893f050a792a-0-7d465fa26098e26f9d75821ff4ed4cb2" alt="M A Halim Rahi" class="prof-img-main">
+                <div class="status"></div>
+            </div>
         </div>
         <div class="h-content">
             <div class="h-greet" id="hGreet"><span class="wave">👋</span> স্বাগতম আমার প্রোফাইলে</div>
@@ -455,7 +534,7 @@
         <div class="ach-card"><span class="ach-icon">✊</span><h4>গণঅভ্যুত্থান</h4><p>ঐতিহাসিক আন্দোলনের সৈনিক</p></div>
         <div class="ach-card"><span class="ach-icon">💼</span><h4>সফল উদ্যোক্তা</h4><p>একাধিক প্রতিষ্ঠান পরিচালনা</p></div>
         <div class="ach-card"><span class="ach-icon">⚖️</span><h4>মানবাধিকার</h4><p>দপ্তর সম্পাদক পদে নিযুক্ত</p></div>
-        <div class="ach-card"><span class="ach-icon">📢</span><h4>কোটা আন্দোলন</h4><p>২০১৮ আন্দোলনে গুরুত্বপূর্ণ ভূমিকা</p></div>
+        <div class="ach-card"><span class="ach-icon">📢</span><h4>কোটা আন্দোলন</h4><p>২০১৮ আন্দোলনে গুরুত্বপূর্ণ ভূমিয়</p></div>
         <div class="ach-card"><span class="ach-icon">🤝</span><h4>সমাজসেবা</h4><p>ব্যাপক সামাজিক কর্মকাণ্ড</p></div>
     </div>
 </div>
@@ -475,7 +554,7 @@
                 <div class="test-author"><div class="test-av"><i class="fas fa-user"></i></div><div><div class="test-name">একজন ব্যবসায়িক সহযোগী</div><div class="test-role">সাকসেস ইনকর্পোরেটেড</div></div></div>
             </div>
             <div class="test-slide">
-                <div class="test-quote">"জকিগঞ্জের মাটি থেকে উঠে আসা এই তরুণের সাহসিকতা আমাদের নতুন প্রজন্মের জন্য দৃষ্টান্ত।"</div>
+                <div class="test-quote">"জকিগঞ্জের মাটি থেকে উঠে আসা এই তরুণের সাহসিকতা আমাদের নতুন প্রজন্বের জন্য দৃষ্টান্ত।"</div>
                 <div class="test-author"><div class="test-av"><i class="fas fa-user"></i></div><div><div class="test-name">একজন স্থানীয় নেতা</div><div class="test-role">জকিগঞ্জ, সিলেট</div></div></div>
             </div>
         </div>
@@ -640,7 +719,19 @@ gsap.registerPlugin(ScrollTrigger);
 
 // === PRELOADER ===
 let lp=0;const pB=document.getElementById('preBar'),pP=document.getElementById('prePct');
-const lI=setInterval(()=>{lp+=~~(Math.random()*10)+3;if(lp>100)lp=100;pB.style.width=lp+'%';pP.textContent=lp+'%';if(lp>=100){clearInterval(lI);setTimeout(()=>{document.getElementById('preloader').classList.add('done');setTimeout(initAll,600)},400)}},50);
+const lI=setInterval(()=>{lp+=~~(Math.random()*10)+3;if(lp>100)lp=100;pB.style.width=lp+'%';pP.textContent=lp+'%';if(lp>=100){clearInterval(lI);setTimeout(()=>{document.getElementById('preloader').classList.add('done');setTimeout(initAll,600);setTimeout(showEidPopup, 1200)},400)}},50);
+
+// === EID POPUP ===
+function showEidPopup() {
+    // Check if popup was shown in this session
+    if(!sessionStorage.getItem('eidShown')) {
+        document.getElementById('eidOverlay').classList.add('act');
+        sessionStorage.setItem('eidShown', 'true');
+    }
+}
+function closeEidPopup() {
+    document.getElementById('eidOverlay').classList.remove('act');
+}
 
 // === CURSOR ===
 const cD=document.getElementById('curD'),cR=document.getElementById('curR');
@@ -667,7 +758,7 @@ function sTab(id,btn){document.querySelectorAll('.tab-p').forEach(p=>p.classList
 // === LIGHTBOX ===
 function openLB(el){document.getElementById('lbImg').src=el.querySelector('img').src;document.getElementById('lb').classList.add('act');document.body.style.overflow='hidden'}
 function closeLB(){document.getElementById('lb').classList.remove('act');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLB()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLB(); closeEidPopup();}});
 
 // === TESTIMONIAL SLIDER ===
 let curSlide=0;const track=document.getElementById('testTrack'),dots=document.querySelectorAll('.test-dot');
@@ -732,4 +823,3 @@ draw();
 </script>
 </body>
 </html>
-```
