@@ -1,8 +1,0 @@
-name = "rahi-portfolio-chat"
-main = "src/index.js"
-compatibility_date = "2026-10-24"
-workers_dev = true
-
-[vars]
-ALLOWED_ORIGINS = "https://rahi.bro.bd"
-GEMINI_MODEL = "gemini-2.5-flash-lite"
